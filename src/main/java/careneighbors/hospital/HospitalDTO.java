@@ -1,5 +1,6 @@
 package careneighbors.hospital;
 
+
 public record HospitalDTO(
         String companyName,
         String address,
