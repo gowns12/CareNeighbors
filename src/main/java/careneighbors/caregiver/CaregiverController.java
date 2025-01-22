@@ -1,8 +1,10 @@
-package careneighbors.caregiver;
+import careneighbors.caregiver.Caregiver;
+import careneighbors.caregiver.CaregiverDTO;
+import careneighbors.caregiver.CaregiverService;
+import careneighbors.caregiver.exception.CaregiverNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +21,32 @@ public class CaregiverController {
     }
 
     @PostMapping
-    public ResponseEntity<Caregiver> createCaregiver(@RequestBody CaregiverDTO caregiverDTO) {
-        Caregiver createdCaregiver = caregiverService.createCaregiver(caregiverDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCaregiver);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createCaregiver(@RequestBody CaregiverDTO caregiverDTO) {
+        caregiverService.createCaregiver(caregiverDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<Caregiver>> getAllCaregivers() {
-        List<Caregiver> caregivers = caregiverService.getAllCaregivers();
-        return ResponseEntity.ok(caregivers);
+    @ResponseStatus(HttpStatus.OK)
+    public List<Caregiver> getAllCaregivers() {
+        return caregiverService.getAllCaregivers();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Caregiver> getCaregiverById(@PathVariable Long id) {
-        Caregiver caregiver = caregiverService.getCaregiverById(id);
-        return ResponseEntity.ok(caregiver);
+    @ResponseStatus(HttpStatus.OK)
+    public Caregiver getCaregiverById(@PathVariable Long id) {
+        return caregiverService.getCaregiverById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Caregiver> updateCaregiver(@PathVariable Long id, @RequestBody CaregiverDTO caregiverDTO) {
-        Caregiver updatedCaregiver = caregiverService.updateCaregiver(id, caregiverDTO);
-        return ResponseEntity.ok(updatedCaregiver);
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCaregiver(@PathVariable Long id, @RequestBody CaregiverDTO caregiverDTO) {
+        caregiverService.updateCaregiver(id, caregiverDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCaregiver(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCaregiver(@PathVariable Long id) {
         caregiverService.deleteCaregiver(id);
-        return ResponseEntity.noContent().build();
     }
 }

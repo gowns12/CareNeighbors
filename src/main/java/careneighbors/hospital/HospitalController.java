@@ -3,7 +3,6 @@ package careneighbors.hospital;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,32 +19,32 @@ public class HospitalController {
     }
 
     @PostMapping
-    public ResponseEntity<Hospital> createHospital(@RequestBody HospitalDTO hospitalDTO) {
-        Hospital createdHospital = hospitalService.createHospital(hospitalDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdHospital);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createHospital(@RequestBody HospitalDTO hospitalDTO) {
+        hospitalService.createHospital(hospitalDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<Hospital>> getAllHospitals() {
-        List<Hospital> hospitals = hospitalService.getAllHospitals();
-        return ResponseEntity.ok(hospitals);
+    @ResponseStatus(HttpStatus.OK)
+    public List<Hospital> getAllHospitals() {
+        return hospitalService.getAllHospitals();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Hospital> getHospitalById(@PathVariable Long id) {
-        Hospital hospital = hospitalService.getHospitalById(id);
-        return ResponseEntity.ok(hospital);
+    @ResponseStatus(HttpStatus.OK)
+    public Hospital getHospitalById(@PathVariable Long id) {
+        return hospitalService.getHospitalById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Hospital> updateHospital(@PathVariable Long id, @RequestBody HospitalDTO hospitalDTO) {
-        Hospital updatedHospital = hospitalService.updateHospital(id, hospitalDTO);
-        return ResponseEntity.ok(updatedHospital);
+    @ResponseStatus(HttpStatus.OK)
+    public void updateHospital(@PathVariable Long id, @RequestBody HospitalDTO hospitalDTO) {
+        hospitalService.updateHospital(id, hospitalDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHospital(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
-        return ResponseEntity.noContent().build();
     }
 }
