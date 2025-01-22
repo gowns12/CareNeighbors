@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -12,18 +12,19 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long Id;
+    private Long id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String gender;
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String residentNumber;
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String phoneNumber;
     @Column(nullable = true)
     private String medicalConditions;
-    Boolean isBlackList = false;
+    @Column(nullable = false)
+    private Boolean isBlackList = false;
 
     public Patient(String name, String gender, String residentNumber, String phoneNumber, String medicalConditions) {
         this.name = name;
