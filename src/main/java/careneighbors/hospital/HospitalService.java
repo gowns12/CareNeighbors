@@ -16,23 +16,33 @@ public class HospitalService {
         this.hospitalRepository = hospitalRepository;
     }
 
-    public Hospital createHospital(HospitalDTO hospitalDTO) {
-        Hospital hospital = HospitalDTO.toEntity(hospitalDTO);
+    public Hospital createHospital(HospitalRequest hospitalRequest) {
+        Hospital hospital = new Hospital(
+                hospitalRequest.companyName(),
+                hospitalRequest.address(),
+                hospitalRequest.contactNumber(),
+                hospitalRequest.bedCount(),
+                hospitalRequest.website(),
+                hospitalRequest.imageUrl()
+                );
         return hospitalRepository.save(hospital);
     }
 
-    public List<Hospital> getAllHospitals() {
-        return hospitalRepository.findAll();
+    public List<HospitalResponse> getAllHospitals() {
+        return hospitalRepository.findAll().stream()
+                .map(o->HospitalResponse.toDto(o)
+                )
+                .toList();
     }
 
-    public Hospital getHospitalById(Long id) {
+    public HospitalResponse getHospitalById(Long id) {
         return hospitalRepository.findById(id)
                 .orElseThrow(() -> new HospitalNotFoundException("Hospital not found with id: " + id));
     }
 
-    public Hospital updateHospital(Long id, HospitalDTO hospitalDTO) {
+    public Hospital updateHospital(Long id, HospitalResponse hospitalResponse) {
         Hospital existingHospital = getHospitalById(id);
-        HospitalDTO.updateEntity(existingHospital, hospitalDTO);
+        existingHospital.update();
         return hospitalRepository.save(existingHospital);
     }
 

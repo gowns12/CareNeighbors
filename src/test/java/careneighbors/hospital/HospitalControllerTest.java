@@ -41,16 +41,16 @@ class HospitalControllerTest {
 
     @Test
     void testCreateHospital() throws Exception {
-        HospitalDTO hospitalDTO = new HospitalDTO("Hospital A", "Seoul", "02-1234-5678", 12345, "General", 100, "www.hospitala.com", "image.jpg");
+        HospitalResponse hospitalResponse = new HospitalResponse("Hospital A", "Seoul", "02-1234-5678", 12345, "General", 100, "www.hospitala.com", "image.jpg");
 
-        doNothing().when(hospitalService).createHospital(any(HospitalDTO.class));
+        doNothing().when(hospitalService).createHospital(any(HospitalResponse.class));
 
         mockMvc.perform(post("/api/hospitals")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(hospitalDTO)))
+                        .content(objectMapper.writeValueAsString(hospitalResponse)))
                 .andExpect(status().isCreated());
 
-        verify(hospitalService, times(1)).createHospital(any(HospitalDTO.class));
+        verify(hospitalService, times(1)).createHospital(any(HospitalResponse.class));
     }
 
     @Test
@@ -81,16 +81,16 @@ class HospitalControllerTest {
     @Test
     void testUpdateHospital() throws Exception {
         Long id = 1L;
-        HospitalDTO hospitalDTO = new HospitalDTO("Hospital B", "Busan", "051-9876-5432", 54321, "Specialized", 200, "www.hospitalb.com", "new_image.jpg");
+        HospitalResponse hospitalResponse = new HospitalResponse("Hospital B", "Busan", "051-9876-5432", 54321, "Specialized", 200, "www.hospitalb.com", "new_image.jpg");
 
-        doNothing().when(hospitalService).updateHospital(eq(id), any(HospitalDTO.class));
+        doNothing().when(hospitalService).updateHospital(eq(id), any(HospitalResponse.class));
 
         mockMvc.perform(put("/api/hospitals/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(hospitalDTO)))
+                        .content(objectMapper.writeValueAsString(hospitalResponse)))
                 .andExpect(status().isOk());
 
-        verify(hospitalService, times(1)).updateHospital(eq(id), any(HospitalDTO.class));
+        verify(hospitalService, times(1)).updateHospital(eq(id), any(HospitalResponse.class));
     }
 
     @Test

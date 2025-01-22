@@ -3,8 +3,13 @@ package careneighbors.hospital;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Hospital {
 
     @Id
@@ -35,76 +40,23 @@ public class Hospital {
     @Column(nullable = true)
     private String imageUrl;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
+    public Hospital(String companyName, String address, String contactNumber, Integer bedCount, String website, String imageUrl) {
         this.companyName = companyName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
-    }
-
-    public Integer getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(Integer registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getBedCount() {
-        return bedCount;
-    }
-
-    public void setBedCount(Integer bedCount) {
         this.bedCount = bedCount;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
         this.website = website;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void update(HospitalRequest rq) {
+        companyName = rq.companyName();
+        address = rq.address();
+        contactNumber = rq.contactNumber();
+        bedCount = rq.bedCount();
+        website = rq.website();
+        imageUrl = rq.imageUrl();
     }
 }
 
