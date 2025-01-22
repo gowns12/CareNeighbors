@@ -1,15 +1,11 @@
 package careneighbors.caregiver;
 
-import careneighbors.caregiver.Caregiver;
-import careneighbors.caregiver.CaregiverDTO;
-import careneighbors.caregiver.CaregiverService;
-import careneighbors.caregiver.exception.CaregiverNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/caregivers")
@@ -24,26 +20,31 @@ public class CaregiverController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCaregiver(@RequestBody CaregiverDTO caregiverDTO) {
-        caregiverService.createCaregiver(caregiverDTO);
+    public CaregiverResponse createCaregiver(@RequestBody CaregiverRequest caregiverRequest) {
+        Caregiver caregiver = caregiverService.createCaregiver(caregiverRequest);
+        return CaregiverResponse.toDto(caregiver);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Caregiver> getAllCaregivers() {
-        return caregiverService.getAllCaregivers();
+    public List<CaregiverResponse> getAllCaregivers() {
+        return caregiverService.getAllCaregivers().stream()
+                .map(CaregiverResponse::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Caregiver getCaregiverById(@PathVariable Long id) {
-        return caregiverService.getCaregiverById(id);
+    public CaregiverResponse getCaregiverById(@PathVariable Long id) {
+        Caregiver caregiver = caregiverService.getCaregiverById(id);
+        return CaregiverResponse.toDto(caregiver);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCaregiver(@PathVariable Long id, @RequestBody CaregiverDTO caregiverDTO) {
-        caregiverService.updateCaregiver(id, caregiverDTO);
+    public CaregiverResponse updateCaregiver(@PathVariable Long id, @RequestBody CaregiverRequest caregiverRequest) {
+        Caregiver updatedCaregiver = caregiverService.updateCaregiver(id, caregiverRequest);
+        return CaregiverResponse.toDto(updatedCaregiver);
     }
 
     @DeleteMapping("/{id}")

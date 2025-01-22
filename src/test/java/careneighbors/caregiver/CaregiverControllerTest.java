@@ -38,16 +38,16 @@ class CaregiverControllerTest {
 
     @Test
     void testCreateCaregiver() throws Exception {
-        CaregiverDTO caregiverDTO = new CaregiverDTO("Korean", "Korean", "Hospital A", "Seoul", "John Doe", 12345, 30, "010-1234-5678", "Seoul, Korea", "image.jpg", false);
+        CaregiverResponse caregiverResponse = new CaregiverResponse("Korean", "Korean", "Hospital A", "Seoul", "John Doe", 12345, "010-1234-5678", "Seoul, Korea", "image.jpg");
 
-        doNothing().when(caregiverService).createCaregiver(any(CaregiverDTO.class));
+        doNothing().when(caregiverService).createCaregiver(any(CaregiverResponse.class));
 
         mockMvc.perform(post("/api/caregivers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(caregiverDTO)))
+                        .content(new ObjectMapper().writeValueAsString(caregiverResponse)))
                 .andExpect(status().isCreated());
 
-        verify(caregiverService, times(1)).createCaregiver(any(CaregiverDTO.class));
+        verify(caregiverService, times(1)).createCaregiver(any(CaregiverResponse.class));
     }
 
     @Test
@@ -77,16 +77,16 @@ class CaregiverControllerTest {
     @Test
     void testUpdateCaregiver() throws Exception {
         Long id = 1L;
-        CaregiverDTO caregiverDTO = new CaregiverDTO("Korean", "Korean", "Hospital B", "Busan", "Jane Doe", 54321, 35, "010-8765-4321", "Busan, Korea", "new_image.jpg", false);
+        CaregiverResponse caregiverResponse = new CaregiverResponse("Korean", "Korean", "Hospital B", "Busan", "Jane Doe", 54321, "010-8765-4321", "Busan, Korea", "new_image.jpg");
 
-        doNothing().when(caregiverService).updateCaregiver(eq(id), any(CaregiverDTO.class));
+        doNothing().when(caregiverService).updateCaregiver(eq(id), any(CaregiverResponse.class));
 
         mockMvc.perform(put("/api/caregivers/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(caregiverDTO)))
+                        .content(new ObjectMapper().writeValueAsString(caregiverResponse)))
                 .andExpect(status().isOk());
 
-        verify(caregiverService, times(1)).updateCaregiver(eq(id), any(CaregiverDTO.class));
+        verify(caregiverService, times(1)).updateCaregiver(eq(id), any(CaregiverResponse.class));
     }
 
     @Test

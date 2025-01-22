@@ -2,8 +2,13 @@ package careneighbors.caregiver;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Caregiver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +30,7 @@ public class Caregiver {
     private String name;
 
     @Column(nullable = false)
-    private Integer registrationNumber;
-
-    @Column(nullable = false)
-    private Integer age;
+    private String registrationNumber;
 
     @Column(nullable = false)
     private String contactNumber;
@@ -39,105 +41,23 @@ public class Caregiver {
     @Column(nullable = true)
     private String imageUrl;
 
-    @Column(nullable = true)
-    private boolean blackList;
+    private final Boolean isBlackList = false;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getAffiliation() {
-        return affiliation;
-    }
-
-    public void setAffiliation(String affiliation) {
+    public Caregiver(String affiliation, String workPlace, String address, String imageUrl) {
         this.affiliation = affiliation;
-    }
-
-    public String getWorkPlace() {
-        return workPlace;
-    }
-
-    public void setWorkPlace(String workPlace) {
         this.workPlace = workPlace;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(Integer registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isBlackList() {
-        return blackList;
-    }
+    public void updata(CaregiverRequest rq) {
 
-    public void setBlackList(boolean blackList) {
-        this.blackList = blackList;
+        affiliation = rq.affiliation();
+        workPlace = rq.workPlace();
+        address = rq.address();
+        imageUrl = rq.imageUrl();
     }
-
+}
     //    @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
 //    private List<Certification> certifications;
 //
@@ -297,4 +217,3 @@ public class Caregiver {
 //
 //    }
 
-}

@@ -18,8 +18,13 @@ public class CaregiverService {
     }
 
     @Transactional
-    public Caregiver createCaregiver(CaregiverDTO caregiverDTO) {
-        Caregiver caregiver = CaregiverDTO.toEntity(caregiverDTO);
+    public Caregiver createCaregiver(CaregiverRequest caregiverRequest) {
+        Caregiver caregiver = new Caregiver(
+                caregiverRequest.affiliation(),
+                caregiverRequest.workPlace(),
+                caregiverRequest.address(),
+                caregiverRequest.imageUrl()
+        );
         return caregiverRepository.save(caregiver);
     }
 
@@ -33,9 +38,9 @@ public class CaregiverService {
     }
 
     @Transactional
-    public Caregiver updateCaregiver(Long id, CaregiverDTO caregiverDTO) {
+    public Caregiver updateCaregiver(Long id, CaregiverRequest caregiverRequest) {
         Caregiver existingCaregiver = getCaregiverById(id);
-        CaregiverDTO.updateEntity(existingCaregiver, caregiverDTO);
+        existingCaregiver.updata(caregiverRequest);
         return caregiverRepository.save(existingCaregiver);
     }
 
