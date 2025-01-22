@@ -20,7 +20,7 @@ public class GuardianService {
     public void createGuardian(CreateGuardianRequest request) {
 
         boolean guardianExists = guardianRepository.existsByResidentNumberOrPhoneNumber(
-                request.ResidentNumber(), request.phoneNumber());
+                request.residentNumber(), request.phoneNumber());
 
         if (guardianExists) {
             throw new IllegalArgumentException("이미 존재하는 보호자");
@@ -28,9 +28,9 @@ public class GuardianService {
 
         Guardian guardian = new Guardian(
                 request.name(),
-                request.ResidentNumber(),
+                request.residentNumber(),
                 request.phoneNumber(),
-                request.Location()
+                request.location()
         );
 
         guardianRepository.save(guardian);
@@ -42,6 +42,7 @@ public class GuardianService {
 
         return guardians.stream()
                 .map(guardian -> new GuardianResponse(
+                        guardian.getId(),
                         guardian.getName(),
                         guardian.getPhoneNumber(),
                         guardian.getResidentNumber(),
@@ -53,20 +54,31 @@ public class GuardianService {
     //보호자 id로 특정 보호자 조회
     public GuardianResponse findGuardiansByGuardianId(Long guardianId) {
         Guardian guardian = guardianRepository.findById(guardianId)
-                .orElseThrow(()->new IllegalArgumentException("없는보호자"));
+                .orElseThrow(() -> new IllegalArgumentException("없는보호자"));
 
-        return new GuardianResponse(guardian.getName(), guardian.getPhoneNumber(),guardian.getResidentNumber(),guardian.getLocation());
+        return new GuardianResponse(guardian.getId(), guardian.getName(), guardian.getPhoneNumber(), guardian.getResidentNumber(), guardian.getLocation());
     }
 
 
     @Transactional
     public void updateGuardianRequest(Long guardianId, UpdateGuardianRequest request) {
         Guardian guardian = guardianRepository.findById(guardianId)
-                .orElseThrow(()->new IllegalArgumentException("없는보호자임"));
-        guardian.setName(request.name());
-        guardian.setResidentNumber(request.ResidentNumber());
-        guardian.setPhoneNumber(request.phoneNumber());
-        guardian.setLocation(request.location());
+                .orElseThrow(() -> new IllegalArgumentException("없는보호자임"));
+
+        Guardian updatedGuardian = new Guardian(
+                request.name(),
+                request.phoneNumber(),
+                request.location(),
+                request.ResidentNumber()
+
+
+        );
+        guardianRepository.save(updatedGuardian);
+
+//        guardian.setName(request.name());
+//        guardian.setResidentNumber(request.ResidentNumber());
+//        guardian.setPhoneNumber(request.phoneNumber());
+//        guardian.setLocation(request.location());
     }
 
     public void deleteByGuardianId(Long guardianId) {

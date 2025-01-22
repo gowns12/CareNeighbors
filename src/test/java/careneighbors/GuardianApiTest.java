@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-
 public class GuardianApiTest extends AcceptanceTest {
 
     @DisplayName("보호자 생성")
@@ -26,7 +25,6 @@ public class GuardianApiTest extends AcceptanceTest {
     }
 
 //모든 보호자 조회
-
     @DisplayName("모든 보호자 조회")
     @Test
     void findAllGuardians() {
@@ -50,7 +48,6 @@ public class GuardianApiTest extends AcceptanceTest {
 
 
     //특정 보호자 조회
-
     @DisplayName("특정 보호자 조회")
     @Test
     void findGuardiansByGuardianId() {
@@ -75,7 +72,6 @@ public class GuardianApiTest extends AcceptanceTest {
     }
 
     //보호자 정보 수정
-
     @DisplayName("보호자 정보 수정")
     @Test
     void updateGuardian() {
@@ -102,7 +98,6 @@ public class GuardianApiTest extends AcceptanceTest {
 
 
     //보호자 정보 수정
-
     @DisplayName("보호자 삭제")
     @Test
     void deleteByGuardianId() {

@@ -6,8 +6,8 @@ public record CreateGuardianRequest(
 
         @NotBlank String name,
         @NotBlank String phoneNumber,
-        @NotBlank String Location,
-        @NotBlank String ResidentNumber
+        @NotBlank String location,
+        @NotBlank String residentNumber
 
 
 ) {

@@ -11,16 +11,29 @@ public class Guardian {
     private Long id;
 
     @Column(nullable = false)
-    String name;
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
+
+    @Column(nullable = false, unique = true)
+    private String residentNumber;
 
     @Column(nullable = false)
-    String phoneNumber;
+    private String location;
 
     @Column(nullable = false)
-    String residentNumber;
+    private Boolean isBlackList = false;
 
-    @Column(nullable = false)
-    String location;
+    protected Guardian() {
+    }
+
+    public Guardian(String name, String phoneNumber, String residentNumber, String location) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.residentNumber = residentNumber;
+        this.location = location;
+    }
 
     public Long getId() {
         return id;
@@ -61,18 +74,9 @@ public class Guardian {
     public void setLocation(String location) {
         this.location = location;
     }
-
-    public Guardian() {
-    }
-
-    public Guardian(String name, String phoneNumber, String residentNumber, String location) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.residentNumber = residentNumber;
-        this.location = location;
-    }
-
-    Boolean isBlackList = false;
-
-
 }
+
+
+
+
+
