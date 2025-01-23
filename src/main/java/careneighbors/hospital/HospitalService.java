@@ -2,6 +2,8 @@ package careneighbors.hospital;
 
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
+import careneighbors.patient.Patient;
+import careneighbors.patient.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +14,12 @@ import java.util.List;
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
+    private final PatientRepository patientRepository;
 
     @Autowired
-    public HospitalService(HospitalRepository hospitalRepository) {
+    public HospitalService(HospitalRepository hospitalRepository ,PatientRepository patientRepository) {
         this.hospitalRepository = hospitalRepository;
+        this.patientRepository = patientRepository;
     }
 
     //Todo 병원 생성
@@ -63,5 +67,11 @@ public class HospitalService {
             throw new IllegalArgumentException("Hospital not found with id: " + id);
         }
         hospitalRepository.deleteById(id);
+    }
+    //Todo 병원비내역생성
+    public void makebill(String hospitalName , Long id) {
+        Hospital hospital = hospitalRepository.findByName(hospitalName);
+        Patient patientNotFound = patientRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Patient not found"));
     }
 }

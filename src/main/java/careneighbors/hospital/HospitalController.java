@@ -26,12 +26,14 @@ public class HospitalController {
     public void createHospital(@RequestBody HospitalRequest rq) {
         hospitalService.createHospital(rq);
     }
+
     //TOdo 병원 목록 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<HospitalResponse> getAllHospitals() {
         return hospitalService.getAllHospitals();
     }
+
     //Todo id로 병원 조회
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -45,10 +47,19 @@ public class HospitalController {
     public void updateHospital(@PathVariable Long id, @RequestBody HospitalRequest rq) {
         hospitalService.updateHospital(id, rq);
     }
+
     //Todo 병원 삭제
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
+
+    }
+
+    //Todo 병원비 내역
+    @PostMapping("/{hospitalname}/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void makebill(@RequestBody String hospitalname , @RequestParam Long id) {
+        hospitalService.makebill(hospitalname, id);
     }
 }
