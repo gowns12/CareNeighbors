@@ -17,10 +17,13 @@ public class GuardianService {
 
     private final GiftRepository giftRepository;
 
-    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository) {
+    private final GuardianPatientRepository guardianPatientRepository;
+
+    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository, GuardianPatientRepository guardianPatientRepository) {
         this.guardianRepository = guardianRepository;
         this.caregiverRepository = caregiverRepository;
         this.giftRepository = giftRepository;
+        this.guardianPatientRepository = guardianPatientRepository;
     }
 
 
@@ -109,6 +112,16 @@ public class GuardianService {
         giftRepository.save(gift);
 
         return "선물이 성공적으로 전달되었습니다.";
+
+    }
+
+    public List<Long> findCaregiverIdsByGuardian(Long guardianId) {
+        List<GuardianPatient> gp = guardianPatientRepository.findAllByGuardianId(guardianId);
+
+        List<Long> caregiverIds = gp.stream()
+                .map(o->o.getPatient().getId())
+
+
 
     }
 }

@@ -23,7 +23,7 @@ public class Gift {
         this.message = message;
     }
 
-    public Gift() {
+    protected Gift() {
     }
 
     public Caregiver getCaregiver() {
