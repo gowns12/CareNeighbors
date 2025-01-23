@@ -1,5 +1,7 @@
-package careneighbors.hospital;
+package careneighbors.hospital.hospitalDto;
 
+
+import careneighbors.hospital.Hospital;
 
 public record HospitalResponse(
         String companyName,

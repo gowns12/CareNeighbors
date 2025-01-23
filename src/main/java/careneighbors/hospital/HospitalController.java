@@ -1,6 +1,8 @@
 package careneighbors.hospital;
 
 
+import careneighbors.hospital.hospitalDto.HospitalRequest;
+import careneighbors.hospital.hospitalDto.HospitalResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
