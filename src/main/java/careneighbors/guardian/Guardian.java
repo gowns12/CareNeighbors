@@ -1,7 +1,13 @@
 package careneighbors.guardian;
 
 
+import careneighbors.caregiver.Caregiver;
+import careneighbors.hospital.Hospital;
+import careneighbors.patient.Patient;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Guardian {
@@ -27,6 +33,15 @@ public class Guardian {
 
     protected Guardian() {
     }
+
+    @OneToMany(mappedBy = "guardian", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GuardianPatient> guardianPatients = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "guardian", cascade = CascadeType.ALL)
+//    private List<Caregiver> caregivers = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "guardian", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Hospital> hospitals = new ArrayList<>();
 
     public Guardian(String name, String phoneNumber, String residentNumber, String location) {
         this.name = name;
