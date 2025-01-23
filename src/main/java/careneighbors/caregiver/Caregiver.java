@@ -40,7 +40,7 @@ public class Caregiver {
     @Column(nullable = true)
     private String imageUrl;
 
-    private final Boolean isBlackList = false;
+    private Boolean isBlackList = false;
 
     public Caregiver(String nationality, String language, String affiliation, String workPlace, String name, String registrationNumber, String contactNumber, String address, String imageUrl) {
         this.nationality = nationality;
