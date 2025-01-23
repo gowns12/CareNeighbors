@@ -1,6 +1,8 @@
 package careneighbors.guardian;
 
 
+import careneighbors.caregiver.Caregiver;
+import careneighbors.caregiver.CaregiverRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,14 @@ public class GuardianService {
 
     private final GuardianRepository guardianRepository;
 
-    public GuardianService(GuardianRepository guardianRepository) {
+    private final CaregiverRepository caregiverRepository;
+
+    private final GiftRepository giftRepository;
+
+    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository) {
         this.guardianRepository = guardianRepository;
+        this.caregiverRepository = caregiverRepository;
+        this.giftRepository = giftRepository;
     }
 
 
@@ -83,6 +91,25 @@ public class GuardianService {
 
     public void deleteByGuardianId(Long guardianId) {
         guardianRepository.deleteById(guardianId);
+    }
+
+
+    //보호자가 간병인 목록 조회
+    public List<Caregiver> findAllCaregiver() {
+        return caregiverRepository.findAll();
+
+    }
+
+    public String giftCaregiver(GiftRequest giftRequest) {
+        Caregiver caregiver = caregiverRepository.findById(giftRequest.caregiverId())
+                .orElseThrow(() -> new IllegalArgumentException("간병인 찾기 실패."));
+
+        Gift gift = new Gift(caregiver, giftRequest.giftMessage());
+
+        giftRepository.save(gift);
+
+        return "선물이 성공적으로 전달되었습니다.";
+
     }
 }
 

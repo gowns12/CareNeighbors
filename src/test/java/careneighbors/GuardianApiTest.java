@@ -1,13 +1,18 @@
 package careneighbors;
 
 
+import careneighbors.caregiver.CaregiverRequest;
 import careneighbors.guardian.CreateGuardianRequest;
+import careneighbors.guardian.GiftRequest;
 import careneighbors.guardian.UpdateGuardianRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public class GuardianApiTest extends AcceptanceTest {
 
@@ -24,7 +29,7 @@ public class GuardianApiTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-//모든 보호자 조회
+    //모든 보호자 조회
     @DisplayName("모든 보호자 조회")
     @Test
     void findAllGuardians() {
@@ -120,4 +125,75 @@ public class GuardianApiTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    //간병인에게 선물하기 - 간병인 목록 조회/선택?
+    //@GetMapping("/findAllCaregiver")
+
+
+    //간병인 조회
+    @DisplayName("간병인 생성")
+    @Test
+    void createCaregiver() {
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CaregiverRequest("국적어쩌구", "콩글리쉬", "알바지옥", "비싼병원", "간병킹", "121212121212", "121212121212", "이세상어딘가", "뷁"))
+                .when()
+                .post("/api/caregivers")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .get("/guardians/findAllCaregiver")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+//    //간병인에게 선물하기 - 간병인 에게 선물하기
+//    @PostMapping("/giftCaregiver")
+//    public String giftCaregiver(@RequestBody GiftRequest giftRequest){
+//        return guardianService.giftCaregiver(giftRequest);
+//    }
+
+    //간병인 조회
+    @DisplayName("간병인 생성")
+    @Test
+    void giftCaregiver() {
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CaregiverRequest("국적어쩌구", "콩글리쉬", "알바지옥", "비싼병원", "간병킹", "121212121212", "121212121212", "이세상어딘가", "뷁"))
+                .when()
+                .post("/api/caregivers")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .get("/guardians/findAllCaregiver")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+
+        // 간병인에게 선물하기 요청
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new GiftRequest(1L, "선물아이템"))
+                .when()
+                .post("/guardians/giftCaregiver")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+
+    }
+
+
 }
+
+
+
+
