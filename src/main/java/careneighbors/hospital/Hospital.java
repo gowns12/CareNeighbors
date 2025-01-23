@@ -7,6 +7,7 @@ import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,21 +17,27 @@ public class Hospital {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     @Column(nullable = false)
     private String companyName;
 
+    @NonNull
     @Column(nullable = false)
     private String address;
 
+    @NonNull
     @Column(nullable = false)
     private String contactNumber;
 
+    @NonNull
     @Column(nullable = false)
-    private Integer registrationNumber;
+    private String registrationNumber;
 
+    @NonNull
     @Column(nullable = false)
     private String type;
 
+    @NonNull
     @Column(nullable = false)
     private Integer bedCount;
 
@@ -40,14 +47,14 @@ public class Hospital {
     @Column(nullable = true)
     private String imageUrl;
 
-
-    public Hospital(String companyName, String address, String contactNumber, Integer bedCount, String website, String imageUrl) {
+    public Hospital(@NonNull String companyName, @NonNull String address, @NonNull String contactNumber, @NonNull String registrationNumber, @NonNull String type, @NonNull Integer bedCount, String website) {
         this.companyName = companyName;
         this.address = address;
         this.contactNumber = contactNumber;
+        this.registrationNumber = registrationNumber;
+        this.type = type;
         this.bedCount = bedCount;
         this.website = website;
-        this.imageUrl = imageUrl;
     }
 
     public void update(HospitalRequest rq) {
