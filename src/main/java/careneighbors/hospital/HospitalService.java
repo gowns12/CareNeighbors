@@ -49,7 +49,13 @@ public class HospitalService {
     public void updateHospital(Long id, HospitalRequest rq) {
         Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Hospital not found with id: " + id));
-        hospital.update(rq);
+        hospital.update(
+                rq.companyName(),
+                rq.address(),
+                rq.contactNumber(),
+                rq.bedCount(),
+                rq.website(),
+                rq.imageUrl());
     }
     //Todo 병원 삭제
     public void deleteHospital(Long id) {
