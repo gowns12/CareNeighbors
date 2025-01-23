@@ -110,11 +110,7 @@ public class Caregiver {
 //    private Caregiver caregiver;
 //}
 //
-//public enum CaregiverGrade {
-//    BEGINNER,
-//    INTERMEDIATE,
-//    ADVANCED,
-//    EXPERT
+
 
 //
 //    public class CaregivingLog {

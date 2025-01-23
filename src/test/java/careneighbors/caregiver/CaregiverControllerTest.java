@@ -1,6 +1,5 @@
 package careneighbors.caregiver;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,34 +25,41 @@ class CaregiverControllerTest {
     private CaregiverService caregiverService;
 
     @InjectMocks
-    private CaregiverControllerTest caregiverController;
+    private CaregiverController caregiverController;
 
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(caregiverController).build();
+        objectMapper = new ObjectMapper();
     }
 
     @Test
     void testCreateCaregiver() throws Exception {
-        CaregiverResponse caregiverResponse = new CaregiverResponse("Korean", "Korean", "Hospital A", "Seoul", "John Doe", 12345, "010-1234-5678", "Seoul, Korea", "image.jpg");
+        CaregiverRequest caregiverRequest = new CaregiverRequest("Korean", "Korean", "Hospital A", "Seoul", "John Doe", "12345", "010-1234-5678", "Seoul, Korea", "image.jpg");
+        CaregiverResponse caregiverResponse = new CaregiverResponse(1L, "Korean", "Korean", "Hospital A", "Seoul", "John Doe", "12345", "010-1234-5678", "Seoul, Korea", "image.jpg");
 
-        doNothing().when(caregiverService).createCaregiver(any(CaregiverResponse.class));
+        when(caregiverService.create(any(CaregiverRequest.class))).thenReturn(caregiverResponse);
 
         mockMvc.perform(post("/api/caregivers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(caregiverResponse)))
-                .andExpect(status().isCreated());
+                        .content(objectMapper.writeValueAsString(caregiverRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
 
-        verify(caregiverService, times(1)).createCaregiver(any(CaregiverResponse.class));
+        verify(caregiverService, times(1)).create(any(CaregiverRequest.class));
     }
 
     @Test
-    void testGetAllCaregivers() throws Exception {
-        List<Caregiver> caregivers = Arrays.asList(new Caregiver(), new Caregiver());
-        when(caregiverService.getAllCaregivers()).thenReturn(caregivers);
+    void testReadAllCaregivers() throws Exception {
+        List<CaregiverResponse> caregivers = Arrays.asList(
+                new CaregiverResponse(1L, "Korean", "Korean", "Hospital A", "Seoul", "John Doe", "12345", "010-1234-5678", "Seoul, Korea", "image1.jpg"),
+                new CaregiverResponse(2L, "English", "English", "Hospital B", "Busan", "Jane Doe", "67890", "010-9876-5432", "Busan, Korea", "image2.jpg")
+        );
+        when(caregiverService.readAll()).thenReturn(caregivers);
 
         mockMvc.perform(get("/api/caregivers"))
                 .andExpect(status().isOk())
@@ -62,11 +68,10 @@ class CaregiverControllerTest {
     }
 
     @Test
-    void testGetCaregiverById() throws Exception {
+    void testReadCaregiver() throws Exception {
         Long id = 1L;
-        Caregiver caregiver = new Caregiver();
-        caregiver.setId(id);
-        when(caregiverService.getCaregiverById(id)).thenReturn(caregiver);
+        CaregiverResponse caregiverResponse = new CaregiverResponse(id, "Korean", "Korean", "Hospital A", "Seoul", "John Doe", "12345", "010-1234-5678", "Seoul, Korea", "image.jpg");
+        when(caregiverService.read(id)).thenReturn(caregiverResponse);
 
         mockMvc.perform(get("/api/caregivers/{id}", id))
                 .andExpect(status().isOk())
@@ -77,26 +82,23 @@ class CaregiverControllerTest {
     @Test
     void testUpdateCaregiver() throws Exception {
         Long id = 1L;
-        CaregiverResponse caregiverResponse = new CaregiverResponse("Korean", "Korean", "Hospital B", "Busan", "Jane Doe", 54321, "010-8765-4321", "Busan, Korea", "new_image.jpg");
-
-        doNothing().when(caregiverService).updateCaregiver(eq(id), any(CaregiverResponse.class));
+        CaregiverRequest caregiverRequest = new CaregiverRequest("Korean", "Korean", "Hospital B", "Busan", "Jane Doe", "54321", "010-8765-4321", "Busan, Korea", "new_image.jpg");
 
         mockMvc.perform(put("/api/caregivers/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(caregiverResponse)))
+                        .content(objectMapper.writeValueAsString(caregiverRequest)))
                 .andExpect(status().isOk());
 
-        verify(caregiverService, times(1)).updateCaregiver(eq(id), any(CaregiverResponse.class));
+        verify(caregiverService, times(1)).update(eq(id), any(CaregiverRequest.class));
     }
 
     @Test
     void testDeleteCaregiver() throws Exception {
         Long id = 1L;
-        doNothing().when(caregiverService).deleteCaregiver(id);
 
         mockMvc.perform(delete("/api/caregivers/{id}", id))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
-        verify(caregiverService, times(1)).deleteCaregiver(id);
+        verify(caregiverService, times(1)).delete(id);
     }
 }

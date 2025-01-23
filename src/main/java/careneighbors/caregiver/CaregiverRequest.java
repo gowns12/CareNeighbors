@@ -7,7 +7,6 @@ public record CaregiverRequest(
         String workPlace,
         String name,
         String registrationNumber,
-        Integer age,
         String contactNumber,
         String address,
         String imageUrl
