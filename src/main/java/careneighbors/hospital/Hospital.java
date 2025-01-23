@@ -3,6 +3,7 @@ package careneighbors.hospital;
 
 
 import careneighbors.caregiver.Caregiver;
+import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.patient.PatientHospital;
 import jakarta.persistence.*;
 import lombok.*;
@@ -68,13 +69,19 @@ public class Hospital {
         this.website = website;
     }
 
-    public void update(HospitalRequest rq) {
-        companyName = rq.companyName();
-        address = rq.address();
-        contactNumber = rq.contactNumber();
-        bedCount = rq.bedCount();
-        website = rq.website();
-        imageUrl = rq.imageUrl();
+    public void update(String companyName,
+                       String address,
+                       String contactNumber,
+                       Integer bedCount,
+                       String website,
+                       String imageUrl) {
+
+        this.companyName = companyName;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.bedCount = bedCount;
+        this.website = website;
+        this.imageUrl = imageUrl;
     }
 }
 
