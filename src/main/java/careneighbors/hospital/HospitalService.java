@@ -1,8 +1,8 @@
 package careneighbors.hospital;
 
-import careneighbors.hospital.exception.HospitalNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,39 +16,41 @@ public class HospitalService {
         this.hospitalRepository = hospitalRepository;
     }
 
-    public Hospital createHospital(HospitalRequest hospitalRequest) {
+    public void createHospital(HospitalRequest hospitalRequest) {
         Hospital hospital = new Hospital(
                 hospitalRequest.companyName(),
                 hospitalRequest.address(),
                 hospitalRequest.contactNumber(),
-                hospitalRequest.bedCount(),
-                hospitalRequest.website(),
-                hospitalRequest.imageUrl()
+                hospitalRequest.registrationNumber(),
+                hospitalRequest.type(),
+                hospitalRequest.bedCount()
                 );
-        return hospitalRepository.save(hospital);
+        hospitalRepository.save(hospital);
     }
 
     public List<HospitalResponse> getAllHospitals() {
         return hospitalRepository.findAll().stream()
-                .map(o->HospitalResponse.toDto(o)
+                .map(HospitalResponse::toDto
                 )
                 .toList();
     }
 
     public HospitalResponse getHospitalById(Long id) {
-        return hospitalRepository.findById(id)
-                .orElseThrow(() -> new HospitalNotFoundException("Hospital not found with id: " + id));
+        Hospital hospital = hospitalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Hospital not found with id: " + id));
+        return HospitalResponse.toDto(hospital);
     }
 
-    public Hospital updateHospital(Long id, HospitalResponse hospitalResponse) {
-        Hospital existingHospital = getHospitalById(id);
-        existingHospital.update();
-        return hospitalRepository.save(existingHospital);
+    @Transactional
+    public void updateHospital(Long id, HospitalRequest rq) {
+        Hospital hospital = hospitalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Hospital not found with id: " + id));
+        hospital.update(rq);
     }
 
     public void deleteHospital(Long id) {
         if (!hospitalRepository.existsById(id)) {
-            throw new HospitalNotFoundException("Hospital not found with id: " + id);
+            throw new IllegalArgumentException("Hospital not found with id: " + id);
         }
         hospitalRepository.deleteById(id);
     }

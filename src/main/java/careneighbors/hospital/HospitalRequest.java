@@ -4,7 +4,7 @@ public record HospitalRequest(
         String companyName,
         String address,
         String contactNumber,
-        Integer registrationNumber,
+        String registrationNumber,
         String type,
         Integer bedCount,
         String website,

@@ -20,8 +20,8 @@ public class HospitalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createHospital(@RequestBody HospitalRequest hospitalRequest) {
-        hospitalService.createHospital(hospitalRequest);
+    public void createHospital(@RequestBody HospitalRequest rq) {
+        hospitalService.createHospital(rq);
     }
 
     @GetMapping
@@ -38,8 +38,8 @@ public class HospitalController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateHospital(@PathVariable Long id, @RequestBody HospitalResponse hospitalResponse) {
-        hospitalService.updateHospital(id, hospitalResponse);
+    public void updateHospital(@PathVariable Long id, @RequestBody HospitalRequest rq) {
+        hospitalService.updateHospital(id, rq);
     }
 
     @DeleteMapping("/{id}")
