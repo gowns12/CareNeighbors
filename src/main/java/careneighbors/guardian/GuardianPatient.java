@@ -3,6 +3,7 @@ package careneighbors.guardian;
 import careneighbors.patient.Patient;
 import jakarta.persistence.*;
 
+@Entity
 public class GuardianPatient {
 
     @Id
