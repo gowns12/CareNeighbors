@@ -2,7 +2,10 @@ package careneighbors.guardian;
 
 
 import careneighbors.caregiver.Caregiver;
+import careneighbors.caregiver.CaregiverPatient;
+import careneighbors.caregiver.CaregiverPatientRepository;
 import careneighbors.caregiver.CaregiverRepository;
+import careneighbors.patient.Patient;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +22,14 @@ public class GuardianService {
 
     private final GuardianPatientRepository guardianPatientRepository;
 
-    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository, GuardianPatientRepository guardianPatientRepository) {
+    private final CaregiverPatientRepository caregiverPatientRepository;
+
+    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository, GuardianPatientRepository guardianPatientRepository, CaregiverPatientRepository caregiverPatientRepository) {
         this.guardianRepository = guardianRepository;
         this.caregiverRepository = caregiverRepository;
         this.giftRepository = giftRepository;
         this.guardianPatientRepository = guardianPatientRepository;
+        this.caregiverPatientRepository = caregiverPatientRepository;
     }
 
 
@@ -119,7 +125,10 @@ public class GuardianService {
         List<GuardianPatient> gp = guardianPatientRepository.findAllByGuardianId(guardianId);
 
         List<Long> caregiverIds = gp.stream()
-                .map(o->o.getPatient().getId())
+                .map(GuardianPatient::getPatient)
+                .distinct()
+                .map(Patient::getId)
+                .flatMap(caregiverPatientRepository::findAllByPatientId)
 
 
 
