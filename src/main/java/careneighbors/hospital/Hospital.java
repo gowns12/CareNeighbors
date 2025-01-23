@@ -15,37 +15,38 @@ public class Hospital {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //Todo Id
 
     @NonNull
     @Column(nullable = false)
-    private String companyName;
+    private String companyName; //Todo 병원명
 
     @NonNull
     @Column(nullable = false)
-    private String address;
+    private String address; //Todo 병원 주소
 
     @NonNull
     @Column(nullable = false)
-    private String contactNumber;
+    private String contactNumber;//Todo 병원 연락쳐
 
     @NonNull
     @Column(nullable = false)
-    private String registrationNumber;
+    private String registrationNumber;//Todo 사업자 등록번호
 
     @NonNull
     @Column(nullable = false)
-    private String type;
+    private String type; // Todo 병원의 사립 공립
 
     @NonNull
     @Column(nullable = false)
-    private Integer bedCount;
+    private Integer bedCount; //Todo 병상수
 
     @Column(nullable = true)
-    private String website;
+    private String website; //Todo 병원 홈페이지
 
     @Column(nullable = true)
-    private String imageUrl;
+    private String imageUrl;// TOdo 병원 이미지
+
 
     public Hospital(@NonNull String companyName, @NonNull String address, @NonNull String contactNumber, @NonNull String registrationNumber, @NonNull String type, @NonNull Integer bedCount, String website) {
         this.companyName = companyName;

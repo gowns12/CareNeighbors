@@ -10,16 +10,4 @@ public record HospitalRequest(
         String website,
         String imageUrl
 ) {
-    public HospitalResponse toDTO() {
-        return new HospitalResponse(
-                companyName,
-                address,
-                contactNumber,
-                registrationNumber,
-                type,
-                bedCount,
-                website,
-                imageUrl
-        );
-    }
 }
