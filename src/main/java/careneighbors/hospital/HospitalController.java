@@ -1,50 +1,39 @@
 package careneighbors.hospital;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/hospitals")
 public class HospitalController {
 
     private final HospitalService hospitalService;
 
-    @Autowired
-    public HospitalController(HospitalService hospitalService) {
-        this.hospitalService = hospitalService;
-    }
-
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createHospital(@RequestBody HospitalRequest hospitalRequest) {
-        hospitalService.createHospital(hospitalRequest);
+    public HospitalResponse createHospital(@RequestBody HospitalRequest rq) {
+        return hospitalService.create(rq);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<HospitalResponse> getAllHospitals() {
-        return hospitalService.getAllHospitals();
+    public List<HospitalResponse> readAllHospitals() {
+        return hospitalService.readAll();
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public HospitalResponse getHospitalById(@PathVariable Long id) {
-        return hospitalService.getHospitalById(id);
+    @GetMapping("/{hospitalId}")
+    public HospitalResponse readHospital(@PathVariable Long hospitalId) {
+        return hospitalService.read(hospitalId);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateHospital(@PathVariable Long id, @RequestBody HospitalResponse hospitalResponse) {
-        hospitalService.updateHospital(id, hospitalResponse);
+    @PutMapping("/{hospitalId}")
+    public void updateHospital(@PathVariable Long hospitalId, @RequestBody HospitalRequest rq) {
+        hospitalService.update(hospitalId, rq);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteHospital(@PathVariable Long id) {
-        hospitalService.deleteHospital(id);
+    @DeleteMapping("/{hospitalId}")
+    public void deleteHospital(@PathVariable Long hospitalId) {
+        hospitalService.delete(hospitalId);
     }
 }

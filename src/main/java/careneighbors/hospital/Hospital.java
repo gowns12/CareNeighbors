@@ -1,7 +1,5 @@
 package careneighbors.hospital;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,9 +9,9 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Hospital {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -40,11 +38,12 @@ public class Hospital {
     @Column(nullable = true)
     private String imageUrl;
 
-
-    public Hospital(String companyName, String address, String contactNumber, Integer bedCount, String website, String imageUrl) {
+    public Hospital(String companyName, String address, String contactNumber, Integer registrationNumber, String type, Integer bedCount, String website, String imageUrl) {
         this.companyName = companyName;
         this.address = address;
         this.contactNumber = contactNumber;
+        this.registrationNumber = registrationNumber;
+        this.type = type;
         this.bedCount = bedCount;
         this.website = website;
         this.imageUrl = imageUrl;
@@ -54,12 +53,13 @@ public class Hospital {
         companyName = rq.companyName();
         address = rq.address();
         contactNumber = rq.contactNumber();
+        registrationNumber = rq.registrationNumber();
+        type = rq.type();
         bedCount = rq.bedCount();
         website = rq.website();
         imageUrl = rq.imageUrl();
     }
 }
-
 
 
 

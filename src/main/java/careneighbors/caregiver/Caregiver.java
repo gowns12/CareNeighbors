@@ -1,6 +1,5 @@
 package careneighbors.caregiver;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,22 +42,32 @@ public class Caregiver {
 
     private final Boolean isBlackList = false;
 
-    public Caregiver(String affiliation, String workPlace, String address, String imageUrl) {
+    public Caregiver(String nationality, String language, String affiliation, String workPlace, String name, String registrationNumber, String contactNumber, String address, String imageUrl) {
+        this.nationality = nationality;
+        this.language = language;
         this.affiliation = affiliation;
         this.workPlace = workPlace;
+        this.name = name;
+        this.registrationNumber = registrationNumber;
+        this.contactNumber = contactNumber;
         this.address = address;
         this.imageUrl = imageUrl;
     }
 
-    public void updata(CaregiverRequest rq) {
-
+    public void update(CaregiverRequest rq) {
+        nationality = rq.nationality();
+        language = rq.language();
         affiliation = rq.affiliation();
         workPlace = rq.workPlace();
+        name = rq.name();
+        registrationNumber = rq.registrationNumber();
+        contactNumber = rq.contactNumber();
         address = rq.address();
         imageUrl = rq.imageUrl();
     }
 }
-    //    @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
+
+//    @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
 //    private List<Certification> certifications;
 //
 //    @ElementCollection

@@ -1,51 +1,54 @@
 package careneighbors.caregiver;
 
 import careneighbors.caregiver.exception.CaregiverNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CaregiverService {
 
     private final CaregiverRepository caregiverRepository;
 
-    @Autowired
-    public CaregiverService(CaregiverRepository caregiverRepository) {
-        this.caregiverRepository = caregiverRepository;
-    }
-
-    @Transactional
-    public Caregiver createCaregiver(CaregiverRequest caregiverRequest) {
+    public CaregiverResponse create(CaregiverRequest rq) {
         Caregiver caregiver = new Caregiver(
-                caregiverRequest.affiliation(),
-                caregiverRequest.workPlace(),
-                caregiverRequest.address(),
-                caregiverRequest.imageUrl()
+                rq.nationality(),
+                rq.language(),
+                rq.affiliation(),
+                rq.workPlace(),
+                rq.name(),
+                rq.registrationNumber(),
+                rq.contactNumber(),
+                rq.address(),
+                rq.imageUrl()
         );
-        return caregiverRepository.save(caregiver);
+        caregiverRepository.save(caregiver);
+        return CaregiverResponse.toDto(caregiver);
     }
 
-    public List<Caregiver> getAllCaregivers() {
-        return caregiverRepository.findAll();
+    public List<CaregiverResponse> readAll() {
+        return caregiverRepository.findAll().stream()
+                .map(CaregiverResponse::toDto)
+                .toList();
     }
 
-    public Caregiver getCaregiverById(Long id) {
-        return caregiverRepository.findById(id)
-                .orElseThrow(() -> new CaregiverNotFoundException("Caregiver not found with id: " + id));
-    }
-
-    @Transactional
-    public Caregiver updateCaregiver(Long id, CaregiverRequest caregiverRequest) {
-        Caregiver existingCaregiver = getCaregiverById(id);
-        existingCaregiver.updata(caregiverRequest);
-        return caregiverRepository.save(existingCaregiver);
+    public CaregiverResponse read(Long caregiverId) {
+        Caregiver caregiver = caregiverRepository.findById(caregiverId)
+                .orElseThrow(() -> new CaregiverNotFoundException("Caregiver not found with id: " + caregiverId));
+        return CaregiverResponse.toDto(caregiver);
     }
 
     @Transactional
-    public void deleteCaregiver(Long id) {
-        caregiverRepository.deleteById(id);
+    public void update(Long caregiverId, CaregiverRequest rq) {
+        Caregiver caregiver = caregiverRepository.findById(caregiverId)
+                .orElseThrow(() -> new CaregiverNotFoundException("Caregiver not found with id: " + caregiverId));
+        caregiver.update(rq);
+    }
+
+    public void delete(Long caregiverId) {
+        caregiverRepository.deleteById(caregiverId);
     }
 }

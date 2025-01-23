@@ -1,55 +1,39 @@
 package careneighbors.caregiver;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/caregivers")
 public class CaregiverController {
 
     private final CaregiverService caregiverService;
 
-    @Autowired
-    public CaregiverController(CaregiverService caregiverService) {
-        this.caregiverService = caregiverService;
-    }
-
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CaregiverResponse createCaregiver(@RequestBody CaregiverRequest caregiverRequest) {
-        Caregiver caregiver = caregiverService.createCaregiver(caregiverRequest);
-        return CaregiverResponse.toDto(caregiver);
+    public CaregiverResponse createCaregiver(@RequestBody CaregiverRequest rq) {
+        return caregiverService.create(rq);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<CaregiverResponse> getAllCaregivers() {
-        return caregiverService.getAllCaregivers().stream()
-                .map(CaregiverResponse::toDto)
-                .collect(Collectors.toList());
+    public List<CaregiverResponse> readAllCaregivers() {
+        return caregiverService.readAll();
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public CaregiverResponse getCaregiverById(@PathVariable Long id) {
-        Caregiver caregiver = caregiverService.getCaregiverById(id);
-        return CaregiverResponse.toDto(caregiver);
+    @GetMapping("/{caregiverId}")
+    public CaregiverResponse readCaregiver(@PathVariable Long caregiverId) {
+        return caregiverService.read(caregiverId);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public CaregiverResponse updateCaregiver(@PathVariable Long id, @RequestBody CaregiverRequest caregiverRequest) {
-        Caregiver updatedCaregiver = caregiverService.updateCaregiver(id, caregiverRequest);
-        return CaregiverResponse.toDto(updatedCaregiver);
+    @PutMapping("/{caregiverId}")
+    public void updateCaregiver(@PathVariable Long caregiverId, @RequestBody CaregiverRequest rq) {
+        caregiverService.update(caregiverId, rq);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCaregiver(@PathVariable Long id) {
-        caregiverService.deleteCaregiver(id);
+    @DeleteMapping("/{caregiverId}")
+    public void deleteCaregiver(@PathVariable Long caregiverId) {
+        caregiverService.delete(caregiverId);
     }
 }

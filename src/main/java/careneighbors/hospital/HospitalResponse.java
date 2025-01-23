@@ -1,7 +1,7 @@
 package careneighbors.hospital;
 
-
 public record HospitalResponse(
+        Long id,
         String companyName,
         String address,
         String contactNumber,
@@ -11,8 +11,9 @@ public record HospitalResponse(
         String website,
         String imageUrl
 ) {
-    public static HospitalResponse toDto(Hospital hospital){
+    public static HospitalResponse toDto(Hospital hospital) {
         return new HospitalResponse(
+                hospital.getId(),
                 hospital.getCompanyName(),
                 hospital.getAddress(),
                 hospital.getContactNumber(),
@@ -23,5 +24,4 @@ public record HospitalResponse(
                 hospital.getImageUrl()
         );
     }
-
 }
