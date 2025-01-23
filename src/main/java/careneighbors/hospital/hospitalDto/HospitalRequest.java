@@ -1,4 +1,4 @@
-package careneighbors.hospital;
+package careneighbors.hospital.hospitalDto;
 
 public record HospitalRequest(
         String companyName,
