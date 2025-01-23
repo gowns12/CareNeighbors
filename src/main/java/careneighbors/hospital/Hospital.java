@@ -52,7 +52,7 @@ public class Hospital {
     private String imageUrl; //Todo 병원 이미지
 
     @OneToMany(mappedBy = "hospital")
-    private List<PatientHospital> patientsHospital; //Todo 병원환자 테이블 관계설정
+    private List<PatientHospital> patientsHospitals; //Todo 병원환자 테이블 관계설정
 
     @OneToMany(mappedBy = "hospital")
     private List<Caregiver> caregivers; // todo 병원 간병인 관계설정
