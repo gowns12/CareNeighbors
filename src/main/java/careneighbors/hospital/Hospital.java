@@ -3,8 +3,6 @@ package careneighbors.hospital;
 
 
 import careneighbors.caregiver.Caregiver;
-import careneighbors.hospital.hospitalDto.HospitalRequest;
-import careneighbors.patient.Patient;
 import careneighbors.patient.PatientHospital;
 import jakarta.persistence.*;
 import lombok.*;
