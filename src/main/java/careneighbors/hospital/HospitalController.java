@@ -74,11 +74,15 @@ public class HospitalController {
         return hospitalService.getPatients(name);
     }
 
-//    //Todo 병원비 청구
-//    @PostMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void hospitalBill(@RequestParam(required = false) Guardian guardian) {
-//        hospitalService.hospitalBills(guardian);
-//    }
-
+    //Todo 치료 비용 , 병상 비용 , 간병 비용 총합 병원비 내역
+    @PostMapping("/{hospitalId}/bills/{guardianId}")
+    public String createHospitalBill(
+            @PathVariable Long hospitalId,      //TOdo 병원Id
+            @PathVariable Long guardianId,      // 보호자 Id
+            @RequestParam double treatmentCost, // 치료 발생 비용
+            @RequestParam double roomCharge,    // 병상 발생 비용
+            @RequestParam double careCost) {    // 간병인 고용 비용
+        hospitalService.generateHospitalBill(hospitalId, guardianId, treatmentCost, roomCharge , careCost);
+        return "병원비 내역 작성완료";
+    }
 }
