@@ -62,7 +62,6 @@ public class CommentService {
         comment.update(rq.patientStatus(), rq.additionalContent(), patient);
     }
 
-
     public void delete(Long commentId) {
         commentRepository.deleteById(commentId);
     }

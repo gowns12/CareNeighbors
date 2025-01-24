@@ -79,11 +79,11 @@ public class Post {
             return true;
         }
 
-        // 환자의 의료 상태가 일치하는지 확인 (의료 상태가 있는 경우)
-        if (this.patient.getMedicalConditions() != null &&
-                this.patient.getMedicalConditions().equals(patient.getMedicalConditions())) {
-            return true;
-        }
+//        // 환자가 속한 병원이 같은지 비교 (병원 정보가 있다고 가정)
+//        if (this.patient.getHospital() != null && patient.getHospital() != null &&
+//                this.patient.getHospital().getId().equals(patient.getHospital().getId())) {
+//            return true;
+//        }
 
         return false;
     }
