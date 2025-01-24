@@ -1,7 +1,7 @@
 package careneighbors.guardian;
 
 
-import careneighbors.caregiver.Caregiver;
+import careneighbors.caregiver.CaregiverPatientResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,29 +45,20 @@ public class GuardianRestController {
         guardianService.deleteByGuardianId(guardianId);
     }
 
-//    //간병인에게 선물하기 - 간병인 목록 조회/선택?
-//    @GetMapping("/findAllCaregiver")
-//    public List<Caregiver> findAllCaregiver(){
-//        return guardianService.findAllCaregiver();
-//    }
 
     //보호자가 환자 아이디로 환자의 간병인 조회
 
     @GetMapping("/caregiverIds/byGuardian/{guardianId}")
-    public List<Long> findCaregiverIdsByGuardian(@PathVariable Long guardianId){
+    public List<CaregiverPatientResponse> findCaregiverIdsByGuardian(@PathVariable Long guardianId) {
         return guardianService.findCaregiverIdsByGuardian(guardianId);
     }
 
 
-
-
-
     //간병인에게 선물하기 - 간병인 에게 선물하기
-    @PostMapping("/giftCaregiver")
-    public String giftCaregiver(@RequestBody GiftRequest giftRequest){
+    @PostMapping("/gift-caregiver")
+    public String giftCaregiver(@RequestBody GiftRequest giftRequest) {
         return guardianService.giftCaregiver(giftRequest);
     }
-
 
 
 }

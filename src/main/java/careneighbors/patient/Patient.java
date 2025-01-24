@@ -1,7 +1,10 @@
 package careneighbors.patient;
 
+import careneighbors.guardian.GuardianPatient;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

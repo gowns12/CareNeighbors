@@ -8,11 +8,10 @@ import jakarta.persistence.*;
 public class Gift {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String message;
-
 
 
     public String getMessage() {
@@ -41,8 +40,6 @@ public class Gift {
 
     @ManyToOne
     private Caregiver caregiver;
-
-
 
 
 }

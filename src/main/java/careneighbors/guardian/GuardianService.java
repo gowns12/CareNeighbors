@@ -1,15 +1,12 @@
 package careneighbors.guardian;
 
 
-import careneighbors.caregiver.Caregiver;
-import careneighbors.caregiver.CaregiverPatient;
-import careneighbors.caregiver.CaregiverPatientRepository;
-import careneighbors.caregiver.CaregiverRepository;
-import careneighbors.patient.Patient;
+import careneighbors.caregiver.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GuardianService {
@@ -121,17 +118,33 @@ public class GuardianService {
 
     }
 
-    public List<Long> findCaregiverIdsByGuardian(Long guardianId) {
-        List<GuardianPatient> gp = guardianPatientRepository.findAllByGuardianId(guardianId);
+    public List<CaregiverPatientResponse> findCaregiverIdsByGuardian(Long guardianId) {
+        // 1. 보호자 ID로 환자 목록 조회
+        List<GuardianPatient> patients = guardianPatientRepository.findByGuardian_Id(guardianId);
 
-        List<Long> caregiverIds = gp.stream()
-                .map(GuardianPatient::getPatient)
-                .distinct()
-                .map(Patient::getId)
-                .flatMap(caregiverPatientRepository::findAllByPatientId)
+        // 2. 환자 목록에서 환자 ID 추출
+        List<Long> patientIds = patients.stream()
+                .map(patient -> patient.getId())
+                .toList();
 
+        // 3. 환자 ID를 기반으로 간병인 목록 조회
+        List<CaregiverPatient> caregivers = caregiverPatientRepository.findAllByPatientIdIn(patientIds);
 
+        //4.
+        return caregivers.stream()
+                // caregiverId로 그룹화
+                .collect(Collectors.groupingBy(cgPatient -> cgPatient.getCaregiver().getId()))
+                .entrySet().stream()
+                .map(entry -> {
+                    Long caregiverId = entry.getKey();
+                    String caregiverName = entry.getValue().get(0).getCaregiver().getName(); // caregiver 이름은 환자마다 같다고 가정
+                    List<String> patientNames = entry.getValue().stream()
+                            .map(cgPatient -> cgPatient.getPatient().getName())
+                            .collect(Collectors.toList());
 
+                    return new CaregiverPatientResponse(caregiverName, caregiverId, patientNames);
+                })
+                .collect(Collectors.toList());
     }
 }
 

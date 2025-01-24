@@ -16,7 +16,6 @@ public class GuardianPatient {
     @ManyToOne
     private Patient patient;
 
-
     public Long getId() {
         return id;
     }
