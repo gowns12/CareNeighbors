@@ -13,6 +13,6 @@ public class CaregiverPatient {
     @ManyToOne
     private Patient patient;
 
-    @ManyToMany
+    @ManyToOne
     private Caregiver caregiver;
 }

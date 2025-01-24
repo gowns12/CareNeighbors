@@ -1,5 +1,8 @@
 package careneighbors.hospital.hospitalDto;
 
+import careneighbors.hospital.Hospital;
+import jakarta.transaction.Transactional;
+
 public record HospitalRequest(
         String companyName,
         String address,
@@ -10,4 +13,5 @@ public record HospitalRequest(
         String website,
         String imageUrl
 ) {
+
 }
