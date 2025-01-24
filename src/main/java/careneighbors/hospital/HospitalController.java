@@ -55,15 +55,4 @@ public class HospitalController {
         hospitalService.deleteHospital(id);
 
     }
-
-//    //Todo 병원비 내역
-//    @PostMapping("/{hospitalname}/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void makebill(@RequestBody String hospitalname , @RequestParam Long id) {
-//        hospitalService.makebill(hospitalname, id);
-//    }
-//    //Todo 환자 등록
-//    @PostMapping("/{id}/patient")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void registerPatient()
 }
