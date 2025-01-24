@@ -2,13 +2,10 @@ package careneighbors.hospital;
 
 import careneighbors.guardian.Guardian;
 import careneighbors.guardian.GuardianRepository;
-import careneighbors.guardian.GuardianResponse;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
 import careneighbors.patient.*;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +43,7 @@ public class HospitalService {
                     )
                     .toList();
         }
-        return hospitalRepository.findByNameContaining(name);
+        return hospitalRepository.findByCompanyNameContaining(name);
     }
 
     //Todo 병원 id And Name 조회

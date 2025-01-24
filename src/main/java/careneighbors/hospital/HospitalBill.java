@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor
 @ToString
-
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HospitalBill {
 

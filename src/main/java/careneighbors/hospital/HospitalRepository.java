@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HospitalRepository extends JpaRepository<Hospital, Long> {
-    Optional<Hospital> findByName(String componyName);
+    Optional<Hospital> findByCompanyName(String componyName);
 
     //Todo Name을 포함하는 병원 찾기
-    List<HospitalResponse> findByNameContaining(String keyword);
+    List<HospitalResponse> findByCompanyNameContaining(String keyword);
 }
