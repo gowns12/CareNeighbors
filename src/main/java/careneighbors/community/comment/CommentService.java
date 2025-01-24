@@ -22,7 +22,7 @@ public class CommentService {
                 commentRepository.findById(rq.guardianCommentId())
                         .orElseThrow(() -> new CommentNotFoundException("Parent comment not found with id: " + rq.guardianCommentId())) :
                 null;
-        Comment comment = new Comment(rq.content(), rq.authorName(), post, guardianComment);
+        Comment comment = new Comment(rq.patientStatus(), rq.additionalContent(), rq.authorName(), post, guardianComment);
         commentRepository.save(comment);
         return CommentResponse.toDto(comment);
     }
@@ -37,7 +37,7 @@ public class CommentService {
     public void update(Long commentId, CommentRequest rq) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + commentId));
-        comment.update(rq.content());
+        comment.update(rq.patientStatus(), rq.additionalContent());
     }
 
     public void delete(Long commentId) {

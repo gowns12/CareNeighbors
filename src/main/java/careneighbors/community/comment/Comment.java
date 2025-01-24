@@ -20,8 +20,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PatientStatusType patientStatus;
+
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private String additionalContent;
 
     @Column(nullable = false)
     private String authorName;
@@ -42,17 +46,18 @@ public class Comment {
 
     private LocalDateTime updatedAt;
 
-    public Comment(String content, String authorName, Post post, Comment guardianComment) {
-        this.content = content;
+    public Comment(PatientStatusType patientStatus, String additionalContent, String authorName, Post post, Comment guardianComment) {
+        this.patientStatus = patientStatus;
+        this.additionalContent = additionalContent;
         this.authorName = authorName;
         this.post = post;
         this.guardianComment = guardianComment;
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String content) {
-        this.content = content;
+    public void update(PatientStatusType patientStatus, String additionalContent) {
+        this.patientStatus = patientStatus;
+        this.additionalContent = additionalContent;
         this.updatedAt = LocalDateTime.now();
     }
 }
-

@@ -1,7 +1,9 @@
 package careneighbors.community.comment;
 
 public record CommentRequest(
-        String content,
+
+        PatientStatusType patientStatus,
+        String additionalContent,
         String authorName,
         Long postId,
         Long guardianCommentId

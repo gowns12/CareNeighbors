@@ -3,16 +3,16 @@ package careneighbors.community.comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/comments")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping
-    public CommentResponse createComment(@RequestBody CommentRequest rq) {
-        return commentService.create(rq);
+    public CommentResponse createComment(@RequestBody CommentRequest request) {
+        return commentService.create(request);
     }
 
     @GetMapping("/{commentId}")
@@ -21,8 +21,8 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public void updateComment(@PathVariable Long commentId, @RequestBody CommentRequest rq) {
-        commentService.update(commentId, rq);
+    public void updateComment(@PathVariable Long commentId, @RequestBody CommentRequest request) {
+        commentService.update(commentId, request);
     }
 
     @DeleteMapping("/{commentId}")

@@ -5,7 +5,8 @@ import java.util.List;
 
 public record CommentResponse(
         Long id,
-        String content,
+        PatientStatusType patientStatus,
+        String additionalContent,
         String authorName,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
@@ -14,7 +15,8 @@ public record CommentResponse(
     public static CommentResponse toDto(Comment comment) {
         return new CommentResponse(
                 comment.getId(),
-                comment.getContent(),
+                comment.getPatientStatus(),
+                comment.getAdditionalContent(),
                 comment.getAuthorName(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
