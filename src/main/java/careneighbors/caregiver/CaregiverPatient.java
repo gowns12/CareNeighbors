@@ -13,6 +13,18 @@ public class CaregiverPatient {
     @ManyToOne
     private Patient patient;
 
-    @ManyToMany
+    @ManyToOne
     private Caregiver caregiver;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Caregiver getCaregiver() {
+        return caregiver;
+    }
 }
