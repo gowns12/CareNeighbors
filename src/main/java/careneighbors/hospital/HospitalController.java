@@ -26,17 +26,19 @@ public class HospitalController {
     public void createHospital(@RequestBody HospitalRequest rq) {
         hospitalService.createHospital(rq);
     }
-    //TOdo 병원 목록 조회
-    @GetMapping
+
+    //TOdo 병원 목록 조회 (null 이면 전체 목록 조회 name 이들어가면 포함하는 결과 반환)
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<HospitalResponse> getAllHospitals() {
-        return hospitalService.getAllHospitals();
+    public List<HospitalResponse> getAllHospitals(@RequestParam(required = false) String name) {
+        return hospitalService.getAllHospitals(name);
     }
-    //Todo id로 병원 조회
+
+    //Todo 병원 id 로 찾기
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public HospitalResponse getHospitalById(@PathVariable Long id) {
-        return hospitalService.getHospitalById(id);
+        return hospitalService.getHospitalByNameAndId(id);
     }
 
     //Todo 병원 수정
@@ -45,10 +47,23 @@ public class HospitalController {
     public void updateHospital(@PathVariable Long id, @RequestBody HospitalRequest rq) {
         hospitalService.updateHospital(id, rq);
     }
+
     //Todo 병원 삭제
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
+
     }
+
+//    //Todo 병원비 내역
+//    @PostMapping("/{hospitalname}/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void makebill(@RequestBody String hospitalname , @RequestParam Long id) {
+//        hospitalService.makebill(hospitalname, id);
+//    }
+//    //Todo 환자 등록
+//    @PostMapping("/{id}/patient")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void registerPatient()
 }

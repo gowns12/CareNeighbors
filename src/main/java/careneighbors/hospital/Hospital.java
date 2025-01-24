@@ -58,7 +58,14 @@ public class Hospital {
     @OneToMany(mappedBy = "hospital")
     private List<Caregiver> caregivers; // todo 병원 간병인 관계설정
 
-    public Hospital(@NonNull String companyName, @NonNull String address, @NonNull String contactNumber, @NonNull String registrationNumber, @NonNull String type, @NonNull Integer bedCount, String website) {
+    public Hospital(@NonNull String companyName,
+                    @NonNull String address,
+                    @NonNull String contactNumber,
+                    @NonNull String registrationNumber,
+                    @NonNull String type,
+                    @NonNull Integer bedCount,
+                    String website,
+                    String imageUrl) {
 
         this.companyName = companyName;
         this.address = address;
@@ -67,6 +74,7 @@ public class Hospital {
         this.type = type;
         this.bedCount = bedCount;
         this.website = website;
+        this.imageUrl = imageUrl;
     }
 
     public void update(String companyName,
@@ -83,6 +91,7 @@ public class Hospital {
         this.website = website;
         this.imageUrl = imageUrl;
     }
+
 }
 
 
