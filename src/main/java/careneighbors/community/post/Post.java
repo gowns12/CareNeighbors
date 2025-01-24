@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +64,27 @@ public class Post {
     }
 
     public boolean isRelatedToPatient(Patient patient) {
-        // 여기에 게시물과 환자의 관련성을 확인하는 로직을 구현합니다.
-        // 예를 들어, 게시물이 특정 환자에 대한 것인지 확인하는 방법은 다음과 같습니다:
-        return this.patient != null && this.patient.equals(patient);
+        if (this.patient == null || patient == null) {
+            return false;
+        }
+
+        // 환자 ID로 직접 비교
+        if (this.patient.getId().equals(patient.getId())) {
+            return true;
+        }
+
+        // 환자 이름과 주민등록번호로 비교
+        if (this.patient.getName().equals(patient.getName()) &&
+                this.patient.getResidentNumber().equals(patient.getResidentNumber())) {
+            return true;
+        }
+
+        // 환자의 의료 상태가 일치하는지 확인 (의료 상태가 있는 경우)
+        if (this.patient.getMedicalConditions() != null &&
+                this.patient.getMedicalConditions().equals(patient.getMedicalConditions())) {
+            return true;
+        }
+
+        return false;
     }
 }
-
-
