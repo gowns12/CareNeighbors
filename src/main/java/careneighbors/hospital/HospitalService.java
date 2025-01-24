@@ -2,9 +2,9 @@ package careneighbors.hospital;
 
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
-import careneighbors.patient.Patient;
-import careneighbors.patient.PatientRepository;
+import careneighbors.patient.*;
 import jakarta.persistence.Id;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,17 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@RequiredArgsConstructor
 @Service
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
+    private final PatientHospitalRepository patientHospitalRepository;
     private final PatientRepository patientRepository;
-
-    @Autowired
-    public HospitalService(HospitalRepository hospitalRepository, PatientRepository patientRepository) {
-        this.hospitalRepository = hospitalRepository;
-        this.patientRepository = patientRepository;
-    }
 
     //Todo 병원 생성
     public void createHospital(HospitalRequest hospitalRequest) {
@@ -77,10 +73,32 @@ public class HospitalService {
         }
         hospitalRepository.deleteById(id);
     }
+    //Todo 환자 등록
+    public void registerPatient(Long id, PatientRequest patient) {
+        Hospital hospital = hospitalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("hospital id not found"));
+        PatientHospital patientHospital = new PatientHospital(patient,hospital);
+        patientHospitalRepository.save(patientHospital);
+    }
+
+    //Todo 환자 조회
+    public List<PatientResponse> getPatients(String name) {
+       return patientRepository.findByNameContaining(name).stream().map(
+                p -> new PatientResponse(
+                        p.getId(),
+                        p.getName(),
+                        p.getAge(),
+                        p.getGender(),
+                        p.getResidentNumber(),
+                        p.getPhoneNumber(),
+                        p.getMedicalConditions())
+        ).toList();
+    }
 //    //Todo 병원비내역생성
 //    public void makebill(String hospitalName , Long id) {
 //        Hospital hospital = hospitalRepository.findByName(hospitalName);
 //        Patient patientNotFound = patientRepository.findById(id).orElseThrow(
 //                () -> new IllegalArgumentException("Patient not found"));
+            //Todo 필드를 병원에 두면
 //    }
 }

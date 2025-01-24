@@ -52,8 +52,11 @@ public class Hospital {
     @Column(nullable = true)
     private String imageUrl; //Todo 병원 이미지
 
+    @Column(nullable = true)
+    private Integer hospitalBill; //Todo 병원비 청구,내역
     @OneToMany(mappedBy = "hospital")
     private List<PatientHospital> patientsHospitals; //Todo 병원환자 테이블 관계설정
+
 
     @OneToMany(mappedBy = "hospital")
     private List<Caregiver> caregivers; // todo 병원 간병인 관계설정

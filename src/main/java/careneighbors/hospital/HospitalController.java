@@ -1,8 +1,12 @@
 package careneighbors.hospital;
 
 
+import careneighbors.guardian.Guardian;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
+import careneighbors.patient.Patient;
+import careneighbors.patient.PatientRequest;
+import careneighbors.patient.PatientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -55,4 +59,26 @@ public class HospitalController {
         hospitalService.deleteHospital(id);
 
     }
+
+    //Todo 환자 등록
+    @PostMapping("/{id}/patient")
+    @ResponseStatus(HttpStatus.OK)
+    public void registerPatient(@PathVariable Long id, @RequestBody(required = false) PatientRequest patient) {
+        hospitalService.registerPatient(id, patient);
+    }
+
+    //Todo 환자 이름으로 조회
+    @GetMapping("/patient")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PatientResponse> getPatientList(@RequestParam(required = false) String name) {
+        return hospitalService.getPatients(name);
+    }
+
+//    //Todo 병원비 청구
+//    @PostMapping("/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void hospitalBill(@RequestParam(required = false) Guardian guardian) {
+//        hospitalService.hospitalBills(guardian);
+//    }
+
 }
