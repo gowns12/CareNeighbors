@@ -2,6 +2,7 @@ package careneighbors.community.comment;
 
 
 import careneighbors.community.post.Post;
+import careneighbors.patient.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,23 +42,29 @@ public class Comment {
     @OneToMany(mappedBy = "guardianComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> childComments = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    public Comment(PatientStatusType patientStatus, String additionalContent, String authorName, Post post, Comment guardianComment) {
+    public Comment(PatientStatusType patientStatus, String additionalContent, String authorName, Post post, Comment guardianComment, Patient patient) {
         this.patientStatus = patientStatus;
         this.additionalContent = additionalContent;
         this.authorName = authorName;
         this.post = post;
         this.guardianComment = guardianComment;
+        this.patient = patient;
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(PatientStatusType patientStatus, String additionalContent) {
+    public void update(PatientStatusType patientStatus, String additionalContent, Patient patient) {
         this.patientStatus = patientStatus;
         this.additionalContent = additionalContent;
+        this.patient = patient;
         this.updatedAt = LocalDateTime.now();
     }
 }

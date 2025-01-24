@@ -6,6 +6,7 @@ public record CommentRequest(
         String additionalContent,
         String authorName,
         Long postId,
-        Long guardianCommentId
+        Long guardianCommentId,
+        Long patientId
 ) {
 }

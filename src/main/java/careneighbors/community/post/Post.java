@@ -2,6 +2,7 @@ package careneighbors.community.post;
 
 import careneighbors.community.Image.Image;
 import careneighbors.community.comment.Comment;
+import careneighbors.patient.Patient;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +45,10 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
     public Post(String title, String content, String authorName) {
         this.title = title;
         this.content = content;
@@ -56,5 +61,12 @@ public class Post {
         this.content = content;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public boolean isRelatedToPatient(Patient patient) {
+        // 여기에 게시물과 환자의 관련성을 확인하는 로직을 구현합니다.
+        // 예를 들어, 게시물이 특정 환자에 대한 것인지 확인하는 방법은 다음과 같습니다:
+        return this.patient != null && this.patient.equals(patient);
+    }
 }
+
 
