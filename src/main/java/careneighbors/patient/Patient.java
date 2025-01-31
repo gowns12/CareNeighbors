@@ -19,6 +19,8 @@ public class Patient {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    private Integer age;
+    @Column(nullable = false)
     private String gender;
     @Column(nullable = false,unique = true)
     private String residentNumber;
