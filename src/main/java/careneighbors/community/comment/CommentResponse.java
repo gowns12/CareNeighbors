@@ -10,7 +10,8 @@ public record CommentResponse(
         String authorName,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<CommentResponse> childComments
+        List<CommentResponse> childComments,
+        String imagePath // 이미지 경로 추가
 ) {
     public static CommentResponse toDto(Comment comment) {
         return new CommentResponse(
@@ -20,7 +21,8 @@ public record CommentResponse(
                 comment.getAuthorName(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                comment.getChildComments().stream().map(CommentResponse::toDto).toList()
+                comment.getChildComments().stream().map(CommentResponse::toDto).toList(),
+                comment.getImagePath() // 이미지 경로 반환
         );
     }
 }

@@ -20,46 +20,75 @@ public class CommentService {
     private final PatientRepository patientRepository;
 
     public CommentResponse create(CommentRequest rq) {
-        Post post = postRepository.findById(rq.postId())
-                .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + rq.postId()));
-        Comment guardianComment = rq.guardianCommentId() != null ?
-                commentRepository.findById(rq.guardianCommentId())
-                        .orElseThrow(() -> new CommentNotFoundException("Parent comment not found with id: " + rq.guardianCommentId())) :
-                null;
-        Patient patient = patientRepository.findById(rq.patientId())
-                .orElseThrow(() -> new PatientMisMatchException("Patient not found with id: " + rq.patientId()));
+        Post post =
+                postRepository.findById(rq.postId())
+                        .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + rq.postId()));
+
+        Comment guardianComment =
+                rq.guardianCommentId() != null ?
+                        commentRepository.findById(rq.guardianCommentId())
+                                .orElseThrow(() -> new CommentNotFoundException("Parent comment not found with id: " + rq.guardianCommentId())) :
+                        null;
+
+        Patient patient =
+                patientRepository.findById(rq.patientId())
+                        .orElseThrow(() -> new PatientMisMatchException("Patient not found with id: " + rq.patientId()));
 
         // 환자와 게시물의 연관성 검증
         if (!post.isRelatedToPatient(patient)) {
             throw new PatientMisMatchException("Patient does not match the post");
         }
 
-        Comment comment = new Comment(rq.patientStatus(), rq.additionalContent(), rq.authorName(), post, guardianComment, patient);
+        // 새로운 댓글 생성 (이미지 포함 여부 확인)
+        Comment comment =
+                new Comment(
+                        rq.patientStatus(),
+                        rq.additionalContent(),
+                        rq.authorName(),
+                        post,
+                        guardianComment,
+                        patient,
+                        rq.imagePath() // 이미지 경로 추가
+                );
+
         commentRepository.save(comment);
         return CommentResponse.toDto(comment);
     }
 
     public CommentResponse read(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + commentId));
+        Comment comment =
+                commentRepository.findById(commentId)
+                        .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + commentId));
+
         return CommentResponse.toDto(comment);
     }
 
     @Transactional
     public void update(Long commentId, CommentRequest rq) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + commentId));
+        Comment comment =
+                commentRepository.findById(commentId)
+                        .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + commentId));
 
-        Patient patient = comment.getPatient();
+        Patient patient =
+                comment.getPatient();
+
         if (rq.patientId() != null && !comment.getPatient().getId().equals(rq.patientId())) {
-            patient = patientRepository.findById(rq.patientId())
-                    .orElseThrow(() -> new PatientMisMatchException("Patient not found with id: " + rq.patientId()));
+            patient =
+                    patientRepository.findById(rq.patientId())
+                            .orElseThrow(() -> new PatientMisMatchException("Patient not found with id: " + rq.patientId()));
+
             if (!comment.getPost().isRelatedToPatient(patient)) {
                 throw new PatientMisMatchException("New patient does not match the post");
             }
         }
 
-        comment.update(rq.patientStatus(), rq.additionalContent(), patient);
+        // 댓글 업데이트 (이미지 포함 여부 확인)
+        comment.update(
+                rq.patientStatus(),
+                rq.additionalContent(),
+                patient,
+                rq.imagePath() // 이미지 경로 업데이트
+        );
     }
 
     public void delete(Long commentId) {
