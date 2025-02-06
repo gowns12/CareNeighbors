@@ -112,11 +112,12 @@ public class HospitalService {
         Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new IllegalArgumentException("Cannot found id"));
 
-        Guardian guardian = guardianRepository.findById(guardianId)
+        Patient patient = patientRepository.findById(guardianId)
                 .orElseThrow(() -> new IllegalArgumentException("Cannot found id"));
 
         //Todo 병원비 계산
-        HospitalBill hospitalBill = new HospitalBill(guardian, treatmentCost, roomCharge, careCost);
+        HospitalBill hospitalBill = new HospitalBill(
+                patient, treatmentCost, roomCharge, careCost);
         //TOdo 병원에 병원비 내역 추가
         hospital.addHospitalBill(hospitalBill);
         //Todo 병원비 내역 저장

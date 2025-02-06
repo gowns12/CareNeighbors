@@ -1,9 +1,8 @@
 package careneighbors.hospital;
 
-import careneighbors.guardian.Guardian;
+import careneighbors.patient.Patient;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 @Entity
 @Getter
@@ -16,6 +15,7 @@ public class HospitalBill {
     //Todo 병원비 지출
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
@@ -30,25 +30,28 @@ public class HospitalBill {
 
     @Column(nullable = false)
     @Setter(AccessLevel.NONE)
-    private Double CareCost; // 간병후 발생 비용
+    private Double careCost; // 간병후 발생 비용
 
     @Column(nullable = false)
     @Setter(AccessLevel.NONE)
     private Double totalCost; // 총 발생 비용
 
+
     @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "hospital_id")
     @Setter(AccessLevel.PUBLIC)
     private Hospital hospital;
 
     @ManyToOne
-    @JoinColumn(name = "guardian_id")
+    @JoinColumn(name = "patient_id")
+    @ToString.Exclude
     @Setter(AccessLevel.NONE)
-    private Guardian guardian;
+    private Patient patient;
 
-    public HospitalBill(Guardian guardian,  Double careCost, Double roomCharge, Double treatmentCost) {
-        this.guardian = guardian;
-        this.CareCost = careCost;
+    public HospitalBill(Patient patient,  Double careCost, Double roomCharge, Double treatmentCost) {
+        this.patient = patient;
+        this.careCost = careCost;
         this.roomCharge = roomCharge;
         this.treatmentCost = treatmentCost;
         this.totalCost = careCost + treatmentCost + roomCharge;
