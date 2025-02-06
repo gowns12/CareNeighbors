@@ -12,4 +12,11 @@ public class PatientHospital {
     private Patient patient;
     @ManyToOne
     private Hospital hospital;
+
+    public PatientHospital(PatientRequest patient, Hospital hospital) {
+
+    }
+    public PatientHospital(PatientResponse patientResponse , Hospital hospital) {
+
+    }
 }
