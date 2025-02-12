@@ -1,10 +1,8 @@
 package careneighbors.hospital;
 
 
-import careneighbors.guardian.Guardian;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
-import careneighbors.patient.Patient;
 import careneighbors.patient.PatientRequest;
 import careneighbors.patient.PatientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ public class HospitalController {
     }
 
     //Todo 병원 추가
-    @PostMapping
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void createHospital(@RequestBody HospitalRequest rq) {
         hospitalService.createHospital(rq);

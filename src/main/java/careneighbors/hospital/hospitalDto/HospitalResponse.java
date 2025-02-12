@@ -4,6 +4,7 @@ package careneighbors.hospital.hospitalDto;
 import careneighbors.hospital.Hospital;
 
 public record HospitalResponse(
+        Long id,
         String companyName,
         String address,
         String contactNumber,
@@ -15,6 +16,7 @@ public record HospitalResponse(
 ) {
     public static HospitalResponse toDto(Hospital hospital){
         return new HospitalResponse(
+                hospital.getId(),
                 hospital.getCompanyName(),
                 hospital.getAddress(),
                 hospital.getContactNumber(),
