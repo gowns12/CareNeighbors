@@ -43,25 +43,36 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(hospitalResponse)
                 .when()
                 .get("/api/hospitals")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
     @DisplayName("id로 병원 조회")
     @Test
-    void getHospitalByIdTest(){
+    void getHospitalByIdTest() {
+
+
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(hospitalResponse)
-                .pathParam("id",1)
+                .body(new HospitalRequest(1L,"nn","","","","",1,"",""))
+                .when()
+                .post("/api/hospitals")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .pathParam("id", 1)
                 .when()
                 .get("/api/hospitals/{id}")
                 .then().log().all()
                 .statusCode(200);
     }
+
     @DisplayName("병원을 삭제한다")
     @Test
     void deletHospitalTest(){
@@ -77,7 +88,6 @@ public class HospitalTest extends AcceptanceTest {
                 .statusCode(201);
 
         RestAssured
-
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .pathParam("id" , 1)
