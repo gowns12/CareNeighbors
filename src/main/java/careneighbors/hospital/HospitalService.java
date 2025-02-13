@@ -2,6 +2,7 @@ package careneighbors.hospital;
 
 import careneighbors.guardian.Guardian;
 import careneighbors.guardian.GuardianRepository;
+import careneighbors.hospital.hospitalDto.HospitalBillRequest;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
 import careneighbors.patient.*;
@@ -75,14 +76,20 @@ public class HospitalService {
         hospitalRepository.deleteById(id);
     }
     //Todo 환자 등록
-    public void registerPatient(Long id, PatientRequest patient) {
-        Hospital hospital = hospitalRepository.findById(id)
+    public void registerPatient(Long hospitalId, PatientRequest patient) {
+        Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new IllegalArgumentException("hospital id not found"));
         PatientHospital patientHospital = new PatientHospital(patient,hospital);
         patientHospitalRepository.save(patientHospital);
     }
-
-    //Todo 환자 조회
+    //TODO 환자 iD 로 조회
+    public PatientHospital getPatientsById(Long hospitalId, Long patientId) {
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(
+                () -> new IllegalArgumentException("찾을수 없는 id"));
+        return patientHospitalRepository.findById(patientId).orElseThrow(
+                () -> new IllegalArgumentException("없는 환자입니다."));
+        }
+    //Todo 환자 이름으로 조회
     public List<PatientResponse> getPatients(String name) {
        return patientRepository.findByNameContaining(name).stream().map(
                 p -> new PatientResponse(
@@ -108,19 +115,24 @@ public class HospitalService {
 //    }
 
     //Todo 병원비 내역
-    public void generateHospitalBill(Long hospitalId, Long guardianId, double treatmentCost, double roomCharge , double careCost) {
+    public void generateHospitalBill(Long hospitalId, Long patientId, double treatmentCost, double roomCharge , double careCost) {
         Hospital hospital = hospitalRepository.findById(hospitalId)
-                .orElseThrow(() -> new IllegalArgumentException("Cannot found id"));
+                .orElseThrow(() -> new IllegalArgumentException("병원 id 를 찾을 수 없습니다."));
 
-        Patient patient = patientRepository.findById(guardianId)
-                .orElseThrow(() -> new IllegalArgumentException("Cannot found id"));
+        PatientHospital patientHospital = patientHospitalRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("환자 id 를 찾을 수 없습니다."));
 
         //Todo 병원비 계산
         HospitalBill hospitalBill = new HospitalBill(
-                patient, treatmentCost, roomCharge, careCost);
+                patientHospital.getPatient()
+                ,treatmentCost
+                ,roomCharge
+                ,careCost);
         //TOdo 병원에 병원비 내역 추가
         hospital.addHospitalBill(hospitalBill);
         //Todo 병원비 내역 저장
         hospitalRepository.save(hospital);
     }
+
+
 }

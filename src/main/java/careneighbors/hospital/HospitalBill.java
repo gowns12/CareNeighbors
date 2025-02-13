@@ -49,7 +49,12 @@ public class HospitalBill {
     @Setter(AccessLevel.NONE)
     private Patient patient;
 
-    public HospitalBill(Patient patient,  Double careCost, Double roomCharge, Double treatmentCost) {
+    public HospitalBill(
+            Patient patient,
+            Double careCost,
+            Double roomCharge,
+            Double treatmentCost)
+    {
         this.patient = patient;
         this.careCost = careCost;
         this.roomCharge = roomCharge;

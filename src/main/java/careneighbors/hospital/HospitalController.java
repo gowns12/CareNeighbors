@@ -3,6 +3,7 @@ package careneighbors.hospital;
 
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
+import careneighbors.patient.PatientHospital;
 import careneighbors.patient.PatientRequest;
 import careneighbors.patient.PatientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +60,19 @@ public class HospitalController {
     }
 
     //Todo 환자 등록
-    @PostMapping("/{id}/patient")
+    @PostMapping("/{hospitalId}/patient")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerPatient(@PathVariable Long hospitalId, @RequestBody(required = false) PatientRequest patient) {
+        hospitalService.registerPatient(hospitalId, patient);
+    }
+
+    //Todo 환자 id 로 조회
+    @GetMapping("/patient/{hospitalId}/{patientId}")
     @ResponseStatus(HttpStatus.OK)
-    public void registerPatient(@PathVariable Long id, @RequestBody(required = false) PatientRequest patient) {
-        hospitalService.registerPatient(id, patient);
+    public PatientHospital getPatientList(
+            @PathVariable Long hospitalId,
+            @PathVariable Long patientId){
+        return hospitalService.getPatientsById(hospitalId,patientId);
     }
 
     //Todo 환자 이름으로 조회
@@ -73,14 +83,15 @@ public class HospitalController {
     }
 
     //Todo 치료 비용 , 병상 비용 , 간병 비용 총합 병원비 내역
-    @PostMapping("/{hospitalId}/bills/{guardianId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{hospitalId}/{patientId}/bills")
     public String createHospitalBill(
             @PathVariable Long hospitalId,      //TOdo 병원Id
-            @PathVariable Long guardianId,      // 보호자 Id
+            @PathVariable Long patientId,      // 보호자 Id
             @RequestParam double treatmentCost, // 치료 발생 비용
             @RequestParam double roomCharge,    // 병상 발생 비용
             @RequestParam double careCost) {    // 간병인 고용 비용
-        hospitalService.generateHospitalBill(hospitalId, guardianId, treatmentCost, roomCharge , careCost);
+        hospitalService.generateHospitalBill(hospitalId, patientId, treatmentCost, roomCharge , careCost);
         return "병원비 내역 작성완료";
     }
 }
