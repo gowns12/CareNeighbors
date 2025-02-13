@@ -1,7 +1,13 @@
 package careneighbors.caregiver;
 
+import careneighbors.hospital.Hospital;
+import careneighbors.patient.Patient;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,6 +48,14 @@ public class Caregiver {
 
     private Boolean isBlackList = false;
 
+    @ManyToOne
+    @JoinTable(name = "hospital_id")
+    private Hospital hospital;
+
+    @OneToMany(mappedBy = "caregiver")
+    private List<CaregiverPatient> caregiverPatients;
+
+
     public Caregiver(String nationality, String language, String affiliation, String workPlace, String name, String registrationNumber, String contactNumber, String address, String imageUrl) {
         this.nationality = nationality;
         this.language = language;
@@ -67,9 +81,9 @@ public class Caregiver {
     }
 }
 
-//    @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
-//    private List<Certification> certifications;
-//
+//@OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
+//private List<Certification> certifications;
+
 //    @ElementCollection
 //    @CollectionTable(name = "caregiver_specializations")
 //    private List<String> specializations;
@@ -80,13 +94,6 @@ public class Caregiver {
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)
 //    private CaregiverGrade grade;
-
-//    @ManyToOne
-//    @JoinColumn(name = "guardian")
-//    private List<Guardian> guardian;
-//
-//    @OneToMany(mappedBy = "patient")
-//    private List<Patient> patient;
 //
 //}
 //

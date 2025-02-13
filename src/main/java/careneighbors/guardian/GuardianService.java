@@ -1,18 +1,32 @@
 package careneighbors.guardian;
 
 
+import careneighbors.caregiver.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GuardianService {
 
     private final GuardianRepository guardianRepository;
 
-    public GuardianService(GuardianRepository guardianRepository) {
+    private final CaregiverRepository caregiverRepository;
+
+    private final GiftRepository giftRepository;
+
+    private final GuardianPatientRepository guardianPatientRepository;
+
+    private final CaregiverPatientRepository caregiverPatientRepository;
+
+    public GuardianService(GuardianRepository guardianRepository, CaregiverRepository caregiverRepository, GiftRepository giftRepository, GuardianPatientRepository guardianPatientRepository, CaregiverPatientRepository caregiverPatientRepository) {
         this.guardianRepository = guardianRepository;
+        this.caregiverRepository = caregiverRepository;
+        this.giftRepository = giftRepository;
+        this.guardianPatientRepository = guardianPatientRepository;
+        this.caregiverPatientRepository = caregiverPatientRepository;
     }
 
 
@@ -83,6 +97,54 @@ public class GuardianService {
 
     public void deleteByGuardianId(Long guardianId) {
         guardianRepository.deleteById(guardianId);
+    }
+
+
+    //보호자가 간병인 목록 조회
+    public List<Caregiver> findAllCaregiver() {
+        return caregiverRepository.findAll();
+
+    }
+
+    public String giftCaregiver(GiftRequest giftRequest) {
+        Caregiver caregiver = caregiverRepository.findById(giftRequest.caregiverId())
+                .orElseThrow(() -> new IllegalArgumentException("간병인 찾기 실패."));
+
+        Gift gift = new Gift(caregiver, giftRequest.giftMessage());
+
+        giftRepository.save(gift);
+
+        return "선물이 성공적으로 전달되었습니다.";
+
+    }
+
+    public List<CaregiverPatientResponse> findCaregiverIdsByGuardian(Long guardianId) {
+        // 1. 보호자 ID로 환자 목록 조회
+        List<GuardianPatient> patients = guardianPatientRepository.findByGuardian_Id(guardianId);
+
+        // 2. 환자 목록에서 환자 ID 추출
+        List<Long> patientIds = patients.stream()
+                .map(patient -> patient.getId())
+                .toList();
+
+        // 3. 환자 ID를 기반으로 간병인 목록 조회
+        List<CaregiverPatient> caregivers = caregiverPatientRepository.findAllByPatientIdIn(patientIds);
+
+        //4.
+        return caregivers.stream()
+                // caregiverId로 그룹화
+                .collect(Collectors.groupingBy(cgPatient -> cgPatient.getCaregiver().getId()))
+                .entrySet().stream()
+                .map(entry -> {
+                    Long caregiverId = entry.getKey();
+                    String caregiverName = entry.getValue().get(0).getCaregiver().getName(); // caregiver 이름은 환자마다 같다고 가정
+                    List<String> patientNames = entry.getValue().stream()
+                            .map(cgPatient -> cgPatient.getPatient().getName())
+                            .collect(Collectors.toList());
+
+                    return new CaregiverPatientResponse(caregiverName, caregiverId, patientNames);
+                })
+                .collect(Collectors.toList());
     }
 }
 

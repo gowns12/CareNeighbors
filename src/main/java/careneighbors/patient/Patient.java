@@ -1,7 +1,10 @@
 package careneighbors.patient;
 
+import careneighbors.guardian.GuardianPatient;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,6 +18,8 @@ public class Patient {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private Integer age;
     @Column(nullable = false)
     private String gender;
     @Column(nullable = false,unique = true)
