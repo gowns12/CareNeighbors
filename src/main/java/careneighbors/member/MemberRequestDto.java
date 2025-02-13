@@ -9,7 +9,7 @@ public record MemberRequestDto(
         String name,
         @NotNull
         String gender,
-        @NotNull@Min(8)@Max(12)
+        @NotNull
         String phoneNumber,
         String eMail,
         @NotNull
@@ -17,4 +17,7 @@ public record MemberRequestDto(
         @NotNull
         String affiliation
 ) {
+    public Member toEntity() {
+        return new Member(name, gender, phoneNumber, eMail, address, affiliation);
+    }
 }
