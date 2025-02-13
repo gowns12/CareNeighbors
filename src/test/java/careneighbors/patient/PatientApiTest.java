@@ -17,7 +17,7 @@ public class PatientApiTest extends AcceptanceTest {
     @DisplayName("환자 생성")
     @Test
     void createPatient() {
-        RestAssured.given().log().all().contentType(ContentType.JSON).body(new PatientRequest("환자이름", "남성", "460513-1236456", "010-1234-1234", "관절염, 욕창, 치매, 폐렴", "국립암센터")).when().post("/careneighbors/patient").then().log().all().statusCode(HttpStatus.OK.value());
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(new PatientRequest("환자이름", "남성", "460513-1236456", "010-1234-1234", "관절염, 욕창, 치매, 폐렴", "국립암센터")).when().post("/careneighbors/patient").then().log().all().statusCode(200);
     }
 
     @DisplayName("환자목록 읽기")

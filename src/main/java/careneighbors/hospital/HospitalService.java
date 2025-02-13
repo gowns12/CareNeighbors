@@ -1,5 +1,6 @@
 package careneighbors.hospital;
 
+import careneighbors.AgeUtils;
 import careneighbors.guardian.Guardian;
 import careneighbors.guardian.GuardianRepository;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
@@ -88,7 +89,7 @@ public class HospitalService {
                 p -> new PatientResponse(
                         p.getId(),
                         p.getName(),
-                        p.getAge(),
+                        AgeUtils.calculateKoreanAge(p.getResidentNumber()),
                         p.getGender(),
                         p.getResidentNumber(),
                         p.getPhoneNumber(),
