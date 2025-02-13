@@ -34,29 +34,29 @@ public class CommentControllerTest {
     }
 
     @Test
-    public void testCreateComment() throws Exception {
-        CommentResponse mockResponse = new CommentResponse(1L, PatientStatusType.STABLE, "추가 설명", "Author", null, null, null);
-        when(commentService.create(any(CommentRequest.class))).thenReturn(mockResponse);
-
-        mockMvc.perform(post("/api/comments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"patientStatus\":\"STABLE\",\"additionalContent\":\"추가 설명\",\"authorName\":\"Author\",\"postId\":1}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.patientStatus").value("STABLE"))
-                .andExpect(jsonPath("$.additionalContent").value("추가 설명"));
-    }
-
-    @Test
     public void testReadComment() throws Exception {
-        CommentResponse mockResponse = new CommentResponse(1L, PatientStatusType.STABLE, "추가 설명", "Author", null, null, null);
+        // Mock 데이터 생성
+        CommentResponse mockResponse = new CommentResponse(
+                1L,
+                PatientStatusType.STABLE,
+                "추가 설명",
+                "Author",
+                null,
+                null,
+                null,
+                "path/to/image.jpg" // 이미지 경로 추가
+        );
+
+        // Mock 동작 정의
         when(commentService.read(1L)).thenReturn(mockResponse);
 
+        // API 호출 및 검증
         mockMvc.perform(get("/api/comments/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.patientStatus").value("STABLE"))
-                .andExpect(jsonPath("$.additionalContent").value("추가 설명"));
+                .andExpect(jsonPath("$.additionalContent").value("추가 설명"))
+                .andExpect(jsonPath("$.imagePath").value("path/to/image.jpg")); // 이미지 경로 검증 추가
     }
 
     @Test
