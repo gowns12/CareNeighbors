@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class PatientHospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long d;
+    private Long id;
     @ManyToOne
     private Patient patient;
     @ManyToOne

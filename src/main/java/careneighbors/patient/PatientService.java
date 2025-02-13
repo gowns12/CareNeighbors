@@ -55,7 +55,13 @@ public class PatientService {
     @Transactional
     public void update(Long patientId, PatientRequest rq) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientMisMatchException("환자가 존재하지 않습니다."));
-        patient.update(rq);
+        patient.update(
+                rq.name(),
+                rq.gender(),
+                rq.residentNumber(),
+                rq.phoneNumber(),
+                rq.medicalConditions()
+        );
     }
 
     public void delete(Long patientId) {
