@@ -1,7 +1,10 @@
 package careneighbors.patient;
 
+import careneighbors.guardian.GuardianPatient;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,8 +18,6 @@ public class Patient {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private Integer age;
     @Column(nullable = false)
     private String gender;
     @Column(nullable = false,unique = true)
@@ -36,11 +37,12 @@ public class Patient {
         this.medicalConditions = medicalConditions;
     }
 
-    public void update(PatientRequest rq) {
-        name = rq.name();
-        gender = rq.gender();
-        residentNumber = rq.phoneNumber();
-        phoneNumber = rq.phoneNumber();
-        medicalConditions = rq.medicalConditions();
+    public void update(String name, String gender, String residentNumber, String phoneNumber, String medicalConditions) {
+        this.name = name;
+        this.gender = gender;
+        this.residentNumber = residentNumber;
+        this.phoneNumber = phoneNumber;
+        this.medicalConditions = medicalConditions;
     }
+
 }
