@@ -3,6 +3,7 @@ package careneighbors.Hospital;
 import careneighbors.AcceptanceTest;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
+import careneighbors.patient.Gender;
 import careneighbors.patient.PatientHospitalRequest;
 import careneighbors.patient.PatientRequest;
 import io.restassured.RestAssured;
@@ -13,18 +14,6 @@ import org.springframework.http.HttpStatus;
 
 public class HospitalTest extends AcceptanceTest {
 
-    HospitalResponse hospitalResponse = new HospitalResponse(
-            1L,
-            "aa",
-            "1221",
-            "1212",
-            "222",
-            "d2da",
-            12212,
-            "22",
-            "2222"
-    );
-
     @DisplayName("병원을 생성한다")
     @Test
     void createHospitalTest() {
@@ -32,7 +21,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "nn", "", "", "", "", 1, "", ""))
+                .body(new HospitalRequest("nn", "", "", "", "", 1, "", ""))
                 .when()
                 .post("/api/hospitals")
                 .then().log().all()
@@ -42,6 +31,16 @@ public class HospitalTest extends AcceptanceTest {
     @DisplayName("병원을 조회한다")
     @Test
     void getHospitalTest() {
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new HospitalRequest("nn", "", "", "", "", 1, "", ""))
+                .when()
+                .post("/api/hospitals")
+                .then().log().all()
+                .statusCode(201);
+
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -59,7 +58,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "nn", "", "", "", "", 1, "", ""))
+                .body(new HospitalRequest("nn", "", "", "", "", 1, "", ""))
                 .when()
                 .post("/api/hospitals")
                 .then().log().all()
@@ -81,7 +80,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L,
+                .body(new HospitalRequest(
                         "명지병원",
                         "화정",
                         "22552",
@@ -110,7 +109,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "명지병원", "화정",
+                .body(new HospitalRequest( "명지병원", "화정",
                         "22552", "2252", "world", 2225,
                         "http://", "221412241421241214124"))
                 .when()
@@ -121,7 +120,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "명지병원", "화2",
+                .body(new HospitalRequest( "명지병원", "화2",
                         "22552", "2252", "worl22d", 2225,
                         "http://", "22141224142114124"))
                 .pathParam("id", 1)
@@ -138,7 +137,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "명지병원", "화2",
+                .body(new HospitalRequest( "명지병원", "화2",
                         "22552", "2252", "worl22d", 2225,
                         "http://", "22141224142114124"))
                 .when()
@@ -150,7 +149,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new PatientHospitalRequest(1L, "김환자", "남성", "2222", "01099993333", "경상",
+                .body(new PatientHospitalRequest( "김환자", "남성", "2222", "01099993333", "경상",
                         "명지병원"))
                 .pathParam("id", 1)
                 .when()
@@ -178,9 +177,15 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L, "명지병원", "화2",
-                        "22552", "2252", "worl22d", 2225,
-                        "http://", "22141224142114124"))
+                .body(new HospitalRequest(
+                        "명지병원",
+                        "화2",
+                        "22552",
+                        "2252",
+                        "worl22d",
+                        2225,
+                        "http://",
+                        "22141224142114124"))
                 .when()
                 .post("/api/hospitals")
                 .then().log().all()
@@ -190,11 +195,14 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new PatientRequest("김환자", "남성", "2222", "01099993333", "경상",
+                .body(new PatientRequest("김환자",
+                        "남성",
+                        "2222",
+                        "01099993333",
+                        "경상",
                         "명지병원"))
-                .pathParam("id", 1)
                 .when()
-                .post("/api/hospitals/{id}/patient")
+                .post("/careneighbors/patient")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
         //Todo 원래는 Created 가 맞지만 api 설계중에 HttpStatues 를 ok 로만들어둬서 201 이 아니라 200 이 반환되는 오류가 발생됨
@@ -218,7 +226,7 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new HospitalRequest(1L,
+                .body(new HospitalRequest(
                         "명지병원",
                         "화2",
                         "22552",
@@ -236,18 +244,17 @@ public class HospitalTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new PatientHospitalRequest(1L
-                        , "김환자"
+                .body(new PatientRequest(
+                         "김환자"
                         , "남성"
                         , "2222"
                         , "01099993333"
                         , "경상",
                         "명지병원"))
-                .pathParam("id", 1)
                 .when()
-                .post("/api/hospitals/{id}/patient")
+                .post("/careneighbors/patient")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(200);
 
         //Todo 병원비 계산
         RestAssured
@@ -262,5 +269,69 @@ public class HospitalTest extends AcceptanceTest {
                 .post("/api/hospitals/{hospitalId}/{patientId}/bills")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    //TOdo 병원비 내역 조회
+    @Test
+    void getHospitalBill() {
+
+        //Todo 병원 등록
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new HospitalRequest(
+                        "명지병원",
+                        "화2",
+                        "22552",
+                        "2252",
+                        "world22d",
+                        2225,
+                        "http://",
+                        "22141224142114124"))
+                .when()
+                .post("/api/hospitals")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        //Todo 환자 등록
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new PatientRequest(
+                        "김환자"
+                        , "남성"
+                        , "2222"
+                        , "01099993333"
+                        , "경상",
+                        "명지병원"))
+                .when()
+                .post("/careneighbors/patient")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        //Todo 병원비 계산
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .pathParam("hospitalId", 1)
+                .pathParam("patientId", 1)
+                .queryParam("treatmentCost", 500000)
+                .queryParam("roomCharge", 500001.2)
+                .queryParam("careCost", 5000000)
+                .when()
+                .post("/api/hospitals/{hospitalId}/{patientId}/bills")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        //Todo 병원비 내역 조회
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .pathParam("hospitalId", 1)
+                .pathParam("patientId", 1)
+                .when()
+                .get("/api/hospitals/{hospitalId}/{patientId}/bills")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }

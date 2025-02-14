@@ -1,8 +1,6 @@
 package careneighbors.hospital;
 
-import careneighbors.guardian.Guardian;
-import careneighbors.guardian.GuardianRepository;
-import careneighbors.hospital.hospitalDto.HospitalBillRequest;
+import careneighbors.AgeUtils;
 import careneighbors.hospital.hospitalDto.HospitalRequest;
 import careneighbors.hospital.hospitalDto.HospitalResponse;
 import careneighbors.patient.*;
@@ -17,22 +15,23 @@ import java.util.NoSuchElementException;
 @Service
 public class HospitalService {
 
+    private final HospitalBillRepository hospitalBillRepository;
     private final HospitalRepository hospitalRepository;
     private final PatientHospitalRepository patientHospitalRepository;
     private final PatientRepository patientRepository;
-    private final GuardianRepository guardianRepository;
 
     //Todo 병원 생성
     public void createHospital(HospitalRequest hospitalRequest) {
-        Hospital hospital = new Hospital(
+        hospitalRepository.save(new Hospital(
                 hospitalRequest.companyName(),
                 hospitalRequest.address(),
                 hospitalRequest.contactNumber(),
                 hospitalRequest.registrationNumber(),
                 hospitalRequest.type(),
-                hospitalRequest.bedCount()
-        );
-        hospitalRepository.save(hospital);
+                hospitalRequest.bedCount(),
+                hospitalRequest.website(),
+                hospitalRequest.imageUrl()
+        ));
     }
 
     //TOdo 병원 목록 조회 (null 이면 전체목록 name 값이 들어가면 포함하는 값을 반환)
@@ -47,7 +46,7 @@ public class HospitalService {
         return hospitalRepository.findByCompanyNameContaining(name);
     }
 
-    //Todo 병원 id And Name 조회
+    //Todo 병원 id  조회
     public HospitalResponse getHospitalByNameAndId(Long id) {
         Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("hospital not found"));
@@ -56,16 +55,20 @@ public class HospitalService {
 
     //Todo 병원 수정
     @Transactional
-    public void updateHospital(Long id, HospitalRequest rq) {
+    public void updateHospital(Long id, HospitalRequest hospitalRequest) {
         Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Hospital not found with id: " + id));
+
         hospital.update(
-                rq.companyName(),
-                rq.address(),
-                rq.contactNumber(),
-                rq.bedCount(),
-                rq.website(),
-                rq.imageUrl());
+                hospitalRequest.companyName(),
+                hospitalRequest.address(),
+                hospitalRequest.contactNumber(),
+                hospitalRequest.registrationNumber(),
+                hospitalRequest.type(),
+                hospitalRequest.bedCount(),
+                hospitalRequest.website(),
+                hospitalRequest.imageUrl()
+        );
     }
 
     //Todo 병원 삭제
@@ -75,27 +78,22 @@ public class HospitalService {
         }
         hospitalRepository.deleteById(id);
     }
-    //Todo 환자 등록
-    public void registerPatient(Long hospitalId, PatientRequest patient) {
-        Hospital hospital = hospitalRepository.findById(hospitalId)
-                .orElseThrow(() -> new IllegalArgumentException("hospital id not found"));
-        PatientHospital patientHospital = new PatientHospital(patient,hospital);
-        patientHospitalRepository.save(patientHospital);
-    }
+
     //TODO 환자 iD 로 조회
     public PatientHospital getPatientsById(Long hospitalId, Long patientId) {
         Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(
                 () -> new IllegalArgumentException("찾을수 없는 id"));
         return patientHospitalRepository.findById(patientId).orElseThrow(
                 () -> new IllegalArgumentException("없는 환자입니다."));
-        }
+    }
+
     //Todo 환자 이름으로 조회
     public List<PatientResponse> getPatients(String name) {
-       return patientRepository.findByNameContaining(name).stream().map(
+        return patientRepository.findByNameContaining(name).stream().map(
                 p -> new PatientResponse(
                         p.getId(),
                         p.getName(),
-                        p.getAge(),
+                        AgeUtils.calculateKoreanAge(p.getResidentNumber()),
                         p.getGender(),
                         p.getResidentNumber(),
                         p.getPhoneNumber(),
@@ -103,36 +101,35 @@ public class HospitalService {
         ).toList();
     }
 
-//    //Todo 보호자 리스트
-//    public List<GuardianResponse> getGuardianList(Long namse) {
-//        return guardianRepository.findAll().stream()
-//                .map(p->new GuardianResponse(
-//                        p.getId(),
-//                        p.getName(),
-//                        p.getPhoneNumber(),
-//                        p.getResidentNumber(),
-//                        p.getLocation())).toList();
-//    }
-
-    //Todo 병원비 내역
-    public void generateHospitalBill(Long hospitalId, Long patientId, double treatmentCost, double roomCharge , double careCost) {
+    //Todo 병원비 내역 생성
+    public void generateHospitalBill(Long hospitalId, Long patientId, double treatmentCost, double roomCharge, double careCost) {
         Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new IllegalArgumentException("병원 id 를 찾을 수 없습니다."));
 
-        PatientHospital patientHospital = patientHospitalRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("환자 id 를 찾을 수 없습니다."));
+        Patient patient = patientRepository.findById(patientId).orElseThrow(
+                () -> new IllegalArgumentException("환자 id 를 찾을 수 없습니다."));
 
-        //Todo 병원비 계산
-        HospitalBill hospitalBill = new HospitalBill(
-                patientHospital.getPatient()
-                ,treatmentCost
-                ,roomCharge
-                ,careCost);
-        //TOdo 병원에 병원비 내역 추가
-        hospital.addHospitalBill(hospitalBill);
-        //Todo 병원비 내역 저장
-        hospitalRepository.save(hospital);
+        hospitalBillRepository.save(new HospitalBill(
+                        hospital,
+                        patient,
+                        treatmentCost,
+                        roomCharge,
+                        careCost
+                )
+        );
     }
 
+    //Todo 병원비 내역 조회
+    public HospitalBill getHospitalBillByPatientId(Long hospitalId, Long patientId) {
+
+        Hospital hospital = hospitalRepository.findById(hospitalId)
+                .orElseThrow(() -> new IllegalArgumentException("병원 id 를 찾을 수 없습니다."));
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("환자 id 를 찾을 수 없습니다."));
+        HospitalBill hospitalBill = hospitalBillRepository.findByHospitalIdAndPatientId(hospital.getId(), patient.getId());
+        return new HospitalBill(hospitalBill.getHospital(),
+                hospitalBill.getPatient(),
+                hospitalBill.getTotalCost());
+    }
 
 }

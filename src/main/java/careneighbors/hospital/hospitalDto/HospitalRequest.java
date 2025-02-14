@@ -4,7 +4,6 @@ import careneighbors.hospital.Hospital;
 import jakarta.transaction.Transactional;
 
 public record HospitalRequest(
-        Long id,
         String companyName,
         String address,
         String contactNumber,
