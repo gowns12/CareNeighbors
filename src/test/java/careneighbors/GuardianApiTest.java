@@ -147,7 +147,7 @@ public class GuardianApiTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .when()
-                .get("/guardians/findAllCaregiver")
+                .get("/api/caregivers")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -158,8 +158,8 @@ public class GuardianApiTest extends AcceptanceTest {
 //        return guardianService.giftCaregiver(giftRequest);
 //    }
 
-    //간병인 조회
-    @DisplayName("간병인 생성")
+    //간병인 생성 조회 선물
+    @DisplayName("간병인 생성, 선물")
     @Test
     void giftCaregiver() {
         RestAssured
@@ -178,7 +178,6 @@ public class GuardianApiTest extends AcceptanceTest {
                 .get("/api/caregivers/{caregiverId}")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
-
 
         // 간병인에게 선물하기 요청
         RestAssured

@@ -124,7 +124,7 @@ public class GuardianService {
 
         // 2. 환자 목록에서 환자 ID 추출
         List<Long> patientIds = patients.stream()
-                .map(patient -> patient.getId())
+                .map(GuardianPatient::getId)
                 .toList();
 
         // 3. 환자 ID를 기반으로 간병인 목록 조회
